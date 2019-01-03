@@ -7,7 +7,7 @@
             <v-flex xs12 md3>
               <v-select
                 v-model="college"
-                :items="['Apple', 'Banana', 'Car']"
+                :items="['學院', '文學院', '理學院', '社會科學學院', '工學院', '管理學院', '法學院', '教育學院', '其他']"
                 label="學院"
               ></v-select>
             </v-flex>
@@ -21,7 +21,7 @@
 
             <v-flex xs12 md4>
               <v-text-field
-                label="課程代碼/課程名稱"
+                label="課程名稱、代碼/教授姓名"
               >
               </v-text-field>
             </v-flex>
@@ -42,7 +42,7 @@
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class Home extends Vue {
+export default class Courses extends Vue {
   college: string = "";
 
   department: string = "";
