@@ -1,6 +1,11 @@
 <template>
   <v-app>
-    <v-toolbar dark color="teal">
+    <v-toolbar
+      :class="isHome ? 'elevation-0' : 'elevation-1'"
+      :color="isHome ? 'transparent' : 'teal'"
+      dark
+      :fixed="isHome"
+    >
       <v-toolbar-title class="logo">
         <router-link :to="{ name: 'home' }">
           <img
@@ -28,7 +33,7 @@
     </v-toolbar>
 
     <v-content>
-      <v-container class="pa-0" fluid>
+      <v-container :class="isHome ? 'pa-0' : 'px-0'" fluid>
         <router-view></router-view>
       </v-container>
     </v-content>
@@ -94,6 +99,10 @@ export default class CCUPLUS extends Vue {
       to: "https://github.com/BePsvPT/CCU-Plus"
     }
   ];
+
+  get isHome(): boolean {
+    return this.$route.name === "home"
+  }
 }
 </script>
 
