@@ -1,5 +1,5 @@
 <template>
-  <v-layout class="pt-5" justify-space-around>
+  <v-layout justify-space-around>
     <v-flex xs11 sm9 md7 lg5 xl3>
       <v-form @submit="submit">
         <p class="display-2 text-xs-center">Juice</p>
