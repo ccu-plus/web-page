@@ -101,7 +101,7 @@ export default class CCUPLUS extends Vue {
   ];
 
   get isHome(): boolean {
-    return this.$route.name === "home"
+    return this.$route.name === "home";
   }
 }
 </script>
