@@ -54,8 +54,8 @@ enum Status {
   Guest,
   Current,
   Alumni,
-  Migrate,
-};
+  Migrate
+}
 
 @Component
 export default class SignIn extends Mixins(FormMixin) {
