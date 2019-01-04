@@ -7,6 +7,7 @@
         <v-text-field
           v-model="username"
           v-validate="'required|length:9,10'"
+          autofocus
           data-vv-name="username"
           data-vv-as="帳號"
           :disabled="isSignUp"
