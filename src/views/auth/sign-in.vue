@@ -11,8 +11,9 @@
           data-vv-as="帳號"
           :disabled="isSignUp"
           :error-messages="$validator.errors.collect('username')"
-          hint="單一入口/校友系統"
-          label="帳號"
+          label="單一入口/校友系統帳號"
+          maxlength="10"
+          minlength="9"
           prepend-icon="fas fa-user"
         ></v-text-field>
 
@@ -25,8 +26,7 @@
           data-vv-as="密碼"
           :disabled="isSignUp"
           :error-messages="$validator.errors.collect('password')"
-          hint="單一入口/校友系統"
-          label="密碼"
+          label="單一入口/校友系統密碼"
           prepend-icon="fas fa-unlock-alt"
           :type="passwordVisible ? 'text' : 'password'"
         ></v-text-field>
