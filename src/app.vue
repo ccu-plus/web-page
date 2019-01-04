@@ -81,11 +81,6 @@ export default class CCUPLUS extends Vue {
       icon: "fas fa-sign-in-alt",
       name: "登入",
       to: "sign-in"
-    },
-    {
-      icon: "fas fa-user-plus",
-      name: "註冊",
-      to: "sign-up"
     }
   ];
 

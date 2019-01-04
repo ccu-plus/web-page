@@ -29,6 +29,28 @@
           :type="passwordVisible ? 'text' : 'password'"
         ></v-text-field>
 
+        <v-text-field
+          v-if="status === statusType.SignUp"
+          v-model="nickname"
+          v-validate="'required|length:3,12'"
+          data-vv-name="nickname"
+          data-vv-as="暱稱"
+          :error-messages="$validator.errors.collect('nickname')"
+          label="暱稱"
+          prepend-icon="far fa-id-card"
+        ></v-text-field>
+
+        <v-text-field
+          v-if="status === statusType.SignUp"
+          v-model="email"
+          v-validate="'required|email'"
+          data-vv-name="email"
+          data-vv-as="信箱"
+          :error-messages="$validator.errors.collect('email')"
+          label="信箱"
+          prepend-icon="fas fa-envelope"
+        ></v-text-field>
+
         <div class="mt-3 text-xs-center">
           <v-btn
             block
@@ -37,8 +59,15 @@
             :loading="false"
             type="submit"
           >
-            <v-icon small>fas fa-sign-in-alt</v-icon>
-            <span class="ml-2">登入</span>
+            <template v-if="status === statusType.SignIn">
+              <v-icon small>fas fa-sign-in-alt</v-icon>
+              <span class="ml-2">登入</span>
+            </template>
+
+            <template v-else-if="status === statusType.SignUp">
+              <v-icon small>fas fa-user-plus</v-icon>
+              <span class="ml-2">註冊</span>
+            </template>
           </v-btn>
         </div>
       </v-form>
@@ -51,15 +80,17 @@ import { Component, Mixins } from "vue-property-decorator";
 import FormMixin from "@/mixins/form.ts";
 
 enum Status {
-  Guest,
-  Current,
+  SignIn,
+  SignUp,
   Alumni,
-  Migrate
+  Migration
 }
 
 @Component
 export default class SignIn extends Mixins(FormMixin) {
-  status: Status = Status.Guest;
+  statusType = Status;
+
+  status: Status = Status.SignIn;
 
   username: string = "";
 
@@ -77,6 +108,16 @@ export default class SignIn extends Mixins(FormMixin) {
     if (!(await this.$validator.validateAll())) {
       return;
     }
+
+    this.signIn();
+  }
+
+  signIn() {
+    //
+  }
+
+  signUp() {
+    //
   }
 }
 </script>
