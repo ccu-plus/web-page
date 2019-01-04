@@ -7,6 +7,7 @@
             <v-flex xs12 md3>
               <v-select
                 v-model="college"
+                hide-details
                 :items="[
                   '學院',
                   '文學院',
@@ -23,7 +24,7 @@
             </v-flex>
 
             <v-flex xs12 md3>
-              <v-text-field label="系所"></v-text-field>
+              <v-text-field hide-details label="系所"></v-text-field>
             </v-flex>
 
             <v-flex xs12 md4>
