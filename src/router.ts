@@ -1,29 +1,29 @@
-import Vue from "vue";
+import bus from "@/lib/bus";
 import Router from "vue-router";
-import Home from "./views/home.vue";
+import routes from "./routes";
+import store from "./store";
+import Vue from "vue";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: "history",
   base: process.env.BASE_URL,
-  routes: [
-    {
-      path: "/",
-      name: "home",
-      component: Home
-    },
-    {
-      path: "/courses",
-      name: "courses",
-      component: () =>
-        import(/* webpackChunkName: 'courses' */ "./views/courses/index.vue")
-    },
-    {
-      path: "/sign-in",
-      name: "sign-in",
-      component: () =>
-        import(/* webpackChunkName: 'auth' */ "./views/auth/sign-in.vue")
-    }
-  ]
+  routes: routes,
+  scrollBehavior(to, from, savedPosition) {
+    return savedPosition || { x: 0, y: 0 };
+  }
 });
+
+router.beforeEach((to, from, next) => {
+  store.state.requests.forEach(xhr => xhr.cancel());
+  store.state.requests = [];
+
+  next();
+});
+
+bus.$on("api-response-404", () => {
+  //
+});
+
+export default router;
