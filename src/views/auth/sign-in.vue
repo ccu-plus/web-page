@@ -89,14 +89,13 @@
 </template>
 
 <script lang="ts">
+import axois from "@/lib/axios";
 import { Component, Mixins } from "vue-property-decorator";
-import FormMixin from "@/mixins/form.ts";
+import FormMixin from "@/mixins/form";
 
 enum Status {
   SignIn,
-  SignUp,
-  Alumni,
-  Migration
+  SignUp
 }
 
 @Component
@@ -128,13 +127,17 @@ export default class SignIn extends Mixins(FormMixin) {
       return;
     }
 
-    this.signIn();
-
-    this.status = Status.SignUp;
+    if (this.isSignIn) {
+      this.signIn();
+    } else if (this.isSignUp) {
+      this.signUp();
+    }
   }
 
   signIn() {
-    //
+    axois.post("/auth/sign-in");
+
+    this.status = Status.SignUp;
   }
 
   signUp() {

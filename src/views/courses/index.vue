@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import FormMixin from "@/mixins/form.ts";
+import FormMixin from "@/mixins/form";
 
 @Component
 export default class Courses extends Mixins(FormMixin) {
