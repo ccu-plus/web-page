@@ -19,7 +19,7 @@ Vue.use(VeeValidate, {
 Vue.use(Vuetify, {
   lang: {
     locales: {
-      "zh-Hant": require("vuetify/lib/locale/zh-Hant")
+      "zh-Hant": require("vuetify/es5/locale/zh-Hant")
     },
     current: "zh-Hant"
   }
