@@ -7,24 +7,22 @@
             <v-flex xs12 md3>
               <v-select
                 v-model="college"
+                clearable
                 hide-details
-                :items="[
-                  '學院',
-                  '文學院',
-                  '理學院',
-                  '社會科學學院',
-                  '工學院',
-                  '管理學院',
-                  '法學院',
-                  '教育學院',
-                  '其他'
-                ]"
+                :items="collegeItems"
                 label="學院"
+                @change="department = ''"
               ></v-select>
             </v-flex>
 
             <v-flex xs12 md3>
-              <v-text-field hide-details label="系所"></v-text-field>
+              <v-select
+                v-model="department"
+                clearable
+                hide-details
+                :items="departmentItems"
+                label="系所"
+              ></v-select>
             </v-flex>
 
             <v-flex xs12 md4>
@@ -34,7 +32,7 @@
                 data-vv-name="keyword"
                 data-vv-as="搜尋字詞"
                 :error-messages="$validator.errors.collect('keyword')"
-                label="課程名稱、代碼/教授姓名"
+                label="課程名稱、代碼/授課教授"
               >
               </v-text-field>
             </v-flex>
@@ -56,7 +54,9 @@
 </template>
 
 <script lang="ts">
+import CollegeList from "./colleges";
 import { Component, Mixins } from "vue-property-decorator";
+import DepartmentList from "./departments";
 import FormMixin from "@/mixins/form";
 
 @Component
@@ -66,6 +66,14 @@ export default class Courses extends Mixins(FormMixin) {
   department: string = "";
 
   keyword: string = "";
+
+  get collegeItems() {
+    return CollegeList;
+  }
+
+  get departmentItems() {
+    return DepartmentList[this.college] || [];
+  }
 
   submit() {
     return 1;
