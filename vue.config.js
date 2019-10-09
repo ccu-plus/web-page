@@ -1,31 +1,48 @@
-const BrotliPlugin = require("brotli-webpack-plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CompressionPlugin = require('compression-webpack-plugin');
 
-let plugins = [];
+const plugins = [
+  // new BundleAnalyzerPlugin(),
+];
 
-if (process.env.NODE_ENV === "production") {
-  const compressOptions = {
-    test: /^(.(?!\.(gz|br)$))+$/i,
-    minRatio: 2
-  };
-
+if (process.env.NODE_ENV === 'production') {
   plugins.push(
-    ...[
-      new CompressionPlugin(compressOptions),
-      new BrotliPlugin(compressOptions)
-    ]
+    new CompressionPlugin({
+      algorithm: 'gzip',
+      minRatio: 1,
+      test: /.*(?<!.br)$/,
+    }),
+    new CompressionPlugin({
+      algorithm: 'brotliCompress',
+      compressionOptions: { level: 11 },
+      filename: '[path].br[query]',
+      minRatio: 1,
+      test: /.*(?<!.gz)$/,
+    }),
   );
 }
 
 module.exports = {
-  chainWebpack: config => {
-    config.plugin("pwa").tap(args => {
-      args[0].name = "CCU PLUS";
-      return args;
-    });
-  },
   configureWebpack: {
-    plugins
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          coreJs: {
+            chunks: 'all',
+            name: 'chunk-core-js',
+            test: /[\\/]node_modules[\\/](core-js|core-js-pure)[\\/]/,
+          },
+          vuetify: {
+            chunks: 'all',
+            name: 'chunk-vuetify',
+            test: /[\\/]node_modules[\\/]vuetify[\\/]/,
+          },
+        }
+      }
+    },
+    plugins,
   },
-  integrity: true
+  integrity: true,
+  productionSourceMap: false,
+  transpileDependencies: ['vuetify']
 };
