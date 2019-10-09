@@ -1,84 +1,190 @@
 <template>
-  <v-layout justify-space-around>
-    <v-flex xs11 sm9 md7>
-      <v-form @submit="submit">
-        <v-container>
-          <v-layout wrap>
-            <v-flex xs12 md3>
-              <v-select
-                v-model="college"
-                clearable
-                hide-details
-                :items="collegeItems"
-                label="學院"
-                @change="department = ''"
-              ></v-select>
-            </v-flex>
+  <v-row justify="space-around">
+    <v-col cols="11" md="10" lg="8" xl="6">
+      <validation-observer
+        v-slot="{ invalid }"
+        @submit.prevent="submit"
+        class="row"
+        tag="form"
+      >
+        <v-col cols="12" md="2">
+          <v-select
+            v-model="form.college"
+            @change="form.department = form.dimension = ''"
+            clearable
+            :disabled="loading"
+            :items="lists.colleges"
+            label="學院"
+            menu-props="offsetY"
+          />
+        </v-col>
 
-            <v-flex xs12 md3>
-              <v-select
-                v-model="department"
-                clearable
-                hide-details
-                :items="departmentItems"
-                label="系所"
-              ></v-select>
-            </v-flex>
+        <v-col cols="12" md="3">
+          <v-select
+            v-model="form.department"
+            @change="form.dimension = ''"
+            clearable
+            :disabled="loading"
+            :items="lists.departments"
+            label="系所"
+            menu-props="offsetY"
+          />
+        </v-col>
 
-            <v-flex xs12 md4>
-              <v-text-field
-                v-model="keyword"
-                v-validate="'max:16'"
-                data-vv-name="keyword"
-                data-vv-as="搜尋字詞"
-                :error-messages="$validator.errors.collect('keyword')"
-                label="課程名稱、代碼/授課教授"
+        <v-col cols="12" md="3">
+          <v-select
+            v-model="form.dimension"
+            clearable
+            :disabled="loading || form.department !== '通識中心'"
+            :items="lists.dimensions"
+            label="向度"
+            menu-props="offsetY"
+          />
+        </v-col>
+
+        <v-col cols="12" md="3">
+          <validation-provider
+            v-slot="{ errors }"
+            name="搜尋字詞"
+            rules="max:16"
+            slim
+          >
+            <v-text-field
+              v-model="form.keyword"
+              clearable
+              :disabled="loading"
+              :error-messages="errors"
+              label="課程名稱、代碼/授課教授"
+              maxlength="16"
+            />
+          </validation-provider>
+        </v-col>
+
+        <v-col cols="12" md="1">
+          <v-btn
+            block
+            color="success"
+            :disabled="invalid"
+            :large="$vuetify.breakpoint.mdAndUp"
+            :loading="loading"
+            type="submit"
+          >
+            <v-icon>{{ icons.mdiMagnify }}</v-icon>
+          </v-btn>
+        </v-col>
+      </validation-observer>
+
+      <v-data-table
+        class="elevation-1"
+        disable-pagination
+        disable-sort
+        :headers="headers"
+        hide-default-footer
+        :items="$store.state.courses"
+        :loading="loading"
+        no-data-text="探索，帶來無限可能"
+      >
+        <template v-slot:item.recently="{ item: { recently } }">
+          <v-icon v-if="recently" color="green">{{ icons.mdiNewBox }}</v-icon>
+        </template>
+
+        <template v-slot:item.code="{ item: { code, dimension } }">
+          <span class="d-block">{{ code }}</span>
+          <span v-if="dimension">{{ dimension }}</span>
+        </template>
+
+        <template v-slot:item.name="{ item: { code, name } }">
+          <router-link :to="{ name: 'courses.show', params: { code } }">{{ name }}</router-link>
+        </template>
+
+        <template v-slot:item.professors="{ item: { professors } }">
+          <span
+            v-for="professor in professors.slice(0, 3)"
+            class="d-block"
+          >{{ professor }}</span>
+
+          <span v-if="professors.length > 3">……</span>
+        </template>
+
+        <template v-if="searched" v-slot:footer>
+          <div class="v-data-footer px-4 py-2">
+            <a
+              class="pt-1"
+              href="https://www.algolia.com"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <img
+                alt="Search by algolia"
+                :src="require('@/assets/search-by-algolia.svg')"
               >
-              </v-text-field>
-            </v-flex>
-
-            <v-flex xs12 md2>
-              <v-btn
-                :block="$vuetify.breakpoint.smAndDown"
-                color="success"
-                :disabled="isFormInvalid"
-              >
-                <v-icon>search</v-icon>
-              </v-btn>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-form>
-    </v-flex>
-  </v-layout>
+            </a>
+          </div>
+        </template>
+      </v-data-table>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
-import CollegeList from "./colleges";
-import { Component, Mixins } from "vue-property-decorator";
-import DepartmentList from "./departments";
-import FormMixin from "@/mixins/form";
+import { Component, Vue } from 'vue-property-decorator';
+import Colleges from '@/libs/colleges';
+import Departments from '@/libs/departments';
+import Dimensions from '@/libs/dimensions';
+import { mdiMagnify, mdiNewBox } from '@mdi/js';
+import { ValidationProvider, ValidationObserver } from '@/libs/validate';
 
-@Component
-export default class Courses extends Mixins(FormMixin) {
-  college: string = "";
+@Component({
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+})
+export default class Courses extends Vue {
+  private form = this.$store.state.search;
 
-  department: string = "";
+  private icons = {
+    mdiMagnify,
+    mdiNewBox,
+  };
 
-  keyword: string = "";
+  private loading = false;
 
-  get collegeItems() {
-    return CollegeList;
+  private searched = false;
+
+  get headers() {
+    const headers = [
+      { value: 'recently', align: 'right' },
+      { text: '開課系所', value: 'department', align: 'center' },
+      { text: '課程代碼', value: 'code', align: 'center' },
+      { text: '課程名稱', value: 'name', align: 'left' },
+      { text: '授課教授', value: 'professors', align: 'center' },
+      { text: '評論數', value: 'comments', align: 'center' },
+    ];
+
+    if (this.$vuetify.breakpoint.xsOnly) {
+      headers.shift();
+    }
+
+    return headers;
   }
 
-  get departmentItems() {
-    return DepartmentList[this.college] || [];
+  get lists() {
+    return {
+      colleges: Colleges,
+      departments: Departments[this.form.college] || [],
+      dimensions: Dimensions,
+    };
   }
 
-  submit() {
-    return 1;
+  private async submit() {
+    this.loading = true;
+
+    await this.$store.dispatch('search', this.form);
+
+    this.loading = false;
+
+    this.searched = true;
   }
 }
 </script>
-
-<style lang="scss" scoped></style>

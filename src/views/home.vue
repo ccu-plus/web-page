@@ -1,40 +1,37 @@
 <template>
-  <div v-resize="onResize" class="home">
-    <v-parallax
-      class="cover"
-      :height="windowHeight"
-      :src="require('../assets/home-cover.jpg')"
-    >
-      <v-layout align-center column justify-center>
-        <div>
-          <v-img
-            height="230"
-            :src="require('../assets/logo.svg')"
-            width="230"
-          ></v-img>
-        </div>
+  <v-parallax
+    v-resize="onResize"
+    :height="windowHeight"
+    :src="require('@/assets/home-cover.jpg')"
+  >
+    <v-row align="center">
+      <v-col class="text-center">
+        <v-img
+          alt="CCU PLUS LOGO"
+          contain
+          eager
+          height="230"
+          :src="require('@/assets/logo.svg')"
+          :transition="false"
+        />
+
         <h1 class="display-3 mt-3">CCU PLUS</h1>
+
         <h4 class="headline">猶如在茫茫學海中那道曙光</h4>
-      </v-layout>
-    </v-parallax>
-  </div>
+      </v-col>
+    </v-row>
+  </v-parallax>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Home extends Vue {
-  windowHeight: number = window.innerHeight;
+  private windowHeight = window.innerHeight;
 
-  onResize() {
+  private onResize() {
     this.windowHeight = window.innerHeight;
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.cover /deep/ img {
-  filter: brightness(90%);
-}
-</style>
