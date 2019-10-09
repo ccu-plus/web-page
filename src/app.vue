@@ -18,6 +18,7 @@
             position="left center"
             :src="require('@/assets/navbar-logo.svg')"
             :transition="false"
+            width="154"
           />
 
           <span v-else class="white--text">CCU PLUS</span>
