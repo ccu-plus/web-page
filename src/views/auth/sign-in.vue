@@ -1,116 +1,161 @@
 <template>
-  <v-layout justify-space-around>
-    <v-flex xs11 sm9 md7 lg5 xl3>
-      <v-form @submit="submit">
-        <p class="display-2 text-xs-center">Juice</p>
+  <v-row justify="space-around">
+    <v-col cols="11" sm="9" md="7" xl="5" lg="3">
+      <validation-observer v-slot="{ invalid, passes }" slim>
+        <v-form @submit.prevent="passes(submit)">
+          <div class="mb-5 d-flex align-center justify-center">
+            <img
+              alt="CCU PLUS LOGO"
+              height="60"
+              :src="require('@/assets/logo.svg')"
+            />
 
-        <v-text-field
-          v-model="username"
-          v-validate="'required|length:9,10'"
-          autofocus
-          data-vv-name="username"
-          data-vv-as="帳號"
-          :disabled="isSignUp"
-          :error-messages="$validator.errors.collect('username')"
-          label="單一入口/校友系統帳號"
-          maxlength="10"
-          minlength="9"
-          prepend-icon="fas fa-user"
-        ></v-text-field>
-
-        <v-text-field
-          v-model="password"
-          v-validate="'required'"
-          :append-icon="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"
-          @click:append="passwordVisible = !passwordVisible"
-          data-vv-name="password"
-          data-vv-as="密碼"
-          :disabled="isSignUp"
-          :error-messages="$validator.errors.collect('password')"
-          label="單一入口/校友系統密碼"
-          prepend-icon="fas fa-unlock-alt"
-          :type="passwordVisible ? 'text' : 'password'"
-        ></v-text-field>
-
-        <v-expand-transition>
-          <div v-if="isSignUp">
-            <p class="mt-2 subheading text-xs-center">
-              歡迎使用 CCU PLUS，就差一步囉！
-            </p>
-
-            <v-text-field
-              v-model="nickname"
-              v-validate="'required|length:3,12'"
-              autofocus
-              data-vv-name="nickname"
-              data-vv-as="暱稱"
-              :error-messages="$validator.errors.collect('nickname')"
-              label="暱稱"
-              maxlength="12"
-              minlength="3"
-              prepend-icon="far fa-id-card"
-            ></v-text-field>
-
-            <v-text-field
-              v-model="email"
-              v-validate="'required|email'"
-              data-vv-name="email"
-              data-vv-as="信箱"
-              :error-messages="$validator.errors.collect('email')"
-              label="信箱"
-              prepend-icon="fas fa-envelope"
-              type="email"
-            ></v-text-field>
+            <span class="ml-2 display-2">CCU PLUS</span>
           </div>
-        </v-expand-transition>
 
-        <div class="mt-3 text-xs-center">
-          <v-btn
-            block
-            color="success"
-            :disabled="isFormInvalid"
-            :loading="false"
-            type="submit"
+          <validation-provider
+            v-slot="{ errors }"
+            name="帳號"
+            rules="required|max:10|min:9"
+            slim
           >
-            <template v-if="isSignIn">
-              <v-icon small>fas fa-sign-in-alt</v-icon>
-              <span class="ml-2">登入</span>
-            </template>
+            <v-text-field
+              v-model="username"
+              autofocus
+              :disabled="isSignUp"
+              :error-messages="errors"
+              label="單一入口/校友系統帳號"
+              maxlength="10"
+              minlength="9"
+              :prepend-icon="icons.mdiAccountBox"
+              required
+            />
+          </validation-provider>
 
-            <template v-else-if="isSignUp">
-              <v-icon small>fas fa-user-plus</v-icon>
-              <span class="ml-2">註冊</span>
-            </template>
-          </v-btn>
-        </div>
-      </v-form>
-    </v-flex>
-  </v-layout>
+          <validation-provider
+            v-slot="{ errors }"
+            name="密碼"
+            rules="required"
+            slim
+          >
+            <v-text-field
+              v-model="password"
+              :append-icon="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"
+              @click:append="passwordVisible = !passwordVisible"
+              :disabled="isSignUp"
+              :error-messages="errors"
+              label="單一入口/校友系統密碼"
+              :prepend-icon="icons.mdiLock"
+              required
+              :type="passwordVisible ? 'text' : 'password'"
+            />
+          </validation-provider>
+
+          <v-expand-transition>
+            <div v-if="isSignUp">
+              <p class="mt-2 subheading text-center">
+                歡迎使用 CCU PLUS，就差一步囉！
+              </p>
+
+              <validation-provider
+                v-slot="{ errors }"
+                name="暱稱"
+                rules="required|max:12|min:3"
+                slim
+              >
+                <v-text-field
+                  v-model="nickname"
+                  autofocus
+                  :error-messages="errors"
+                  label="暱稱"
+                  maxlength="12"
+                  minlength="3"
+                  :prepend-icon="icons.mdiAccountCardDetails"
+                  required
+                />
+              </validation-provider>
+
+              <validation-provider
+                v-slot="{ errors }"
+                name="信箱"
+                rules="required|email"
+                slim
+              >
+                <v-text-field
+                  v-model="email"
+                  :error-messages="errors"
+                  label="信箱"
+                  :prepend-icon="icons.mdiEmail"
+                  required
+                  type="email"
+                />
+              </validation-provider>
+            </div>
+          </v-expand-transition>
+
+          <div class="mt-3 text-center">
+            <v-btn
+              block
+              color="success"
+              :disabled="invalid"
+              :loading="false"
+              type="submit"
+            >
+              <template v-if="isSignIn">
+                <v-icon small>{{ icons.mdiLogin }}</v-icon>
+                <span class="ml-1">登入</span>
+              </template>
+
+              <template v-else-if="isSignUp">
+                <v-icon small>{{ icons.mdiAccountPlus }}</v-icon>
+                <span class="ml-1">註冊</span>
+              </template>
+            </v-btn>
+          </div>
+        </v-form>
+      </validation-observer>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
-import axois from "@/lib/axios";
-import { Component, Mixins } from "vue-property-decorator";
-import FormMixin from "@/mixins/form";
+import axios from '@/libs/axios';
+import { Component, Vue } from 'vue-property-decorator';
+import { ValidationProvider, ValidationObserver } from '@/libs/validate';
+import { mdiAccountBox, mdiAccountCardDetails, mdiAccountPlus, mdiEmail, mdiLock, mdiLogin } from '@mdi/js';
 
 enum Status {
   SignIn,
-  SignUp
+  SignUp,
 }
 
-@Component
-export default class SignIn extends Mixins(FormMixin) {
-  status: Status = Status.SignIn;
+@Component({
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+})
+export default class SignIn extends Vue {
+  private icons = {
+    mdiAccountBox,
+    mdiAccountCardDetails,
+    mdiAccountPlus,
+    mdiEmail,
+    mdiLock,
+    mdiLogin,
+  };
 
-  username: string = "";
+  private status: Status = Status.SignIn;
 
-  password: string = "";
+  private username = '';
 
-  passwordVisible: boolean = false;
+  private password = '';
 
-  nickname: string = "";
+  private passwordVisible = false;
 
-  email: string = "";
+  private nickname = '';
+
+  private email = '';
 
   get isSignIn() {
     return this.status === Status.SignIn;
@@ -120,13 +165,7 @@ export default class SignIn extends Mixins(FormMixin) {
     return this.status === Status.SignUp;
   }
 
-  async submit(event: Event) {
-    event.preventDefault();
-
-    if (!(await this.$validator.validateAll())) {
-      return;
-    }
-
+  private async submit() {
     if (this.isSignIn) {
       this.signIn();
     } else if (this.isSignUp) {
@@ -134,13 +173,13 @@ export default class SignIn extends Mixins(FormMixin) {
     }
   }
 
-  signIn() {
-    axois.post("/auth/sign-in");
+  private signIn() {
+    axios.post('/auth/sign-in');
 
     this.status = Status.SignUp;
   }
 
-  signUp() {
+  private signUp() {
     //
   }
 }

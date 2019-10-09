@@ -1,126 +1,111 @@
 <template>
   <v-app>
-    <v-toolbar
-      :class="isHome ? 'elevation-0' : 'elevation-1'"
+    <v-app-bar
       :color="isHome ? 'transparent' : 'teal'"
       dark
+      :elevation="isHome ? 0 : 1"
       :fixed="isHome"
+      max-height="64"
     >
-      <v-toolbar-title class="logo">
+      <v-toolbar-title>
         <router-link :to="{ name: 'home' }">
-          <img
+          <v-img
             v-if="$vuetify.breakpoint.mdAndUp"
-            src="./assets/navbar-logo.svg"
+            alt="ccu-plus-logo"
+            contain
+            eager
+            height="40"
+            position="left center"
+            :src="require('@/assets/navbar-logo.svg')"
+            :transition="false"
           />
-          <span v-else>CCU PLUS</span>
+
+          <span v-else class="white--text">CCU PLUS</span>
         </router-link>
       </v-toolbar-title>
 
-      <v-spacer></v-spacer>
+      <div class="flex-grow-1" />
 
       <v-toolbar-items>
         <v-btn
-          v-for="link in navbarLinks"
-          :flat="$vuetify.breakpoint.mdAndUp"
-          :key="link.to"
+          v-for="link in links.navbar"
           :icon="$vuetify.breakpoint.smAndDown"
+          :key="link.to"
+          :text="$vuetify.breakpoint.mdAndUp"
           :to="{ name: link.to }"
         >
-          <v-icon class="fa-fw" small>{{ link.icon }}</v-icon>
+          <v-icon small>{{ link.icon }}</v-icon>
+
           <span class="ml-1 hidden-sm-and-down">{{ link.name }}</span>
         </v-btn>
       </v-toolbar-items>
-    </v-toolbar>
+    </v-app-bar>
 
     <v-content>
-      <v-container :class="isHome ? 'pa-0' : 'px-0'" fluid>
-        <router-view></router-view>
+      <v-container
+        class="h-full"
+        :class="isHome ? 'pa-0' : 'px-0'"
+        fluid
+      >
+        <router-view />
       </v-container>
     </v-content>
 
-    <v-footer dark height="auto">
-      <v-card class="teal darken-1 text-xs-center" flat tile width="100%">
-        <v-card-text>
-          <v-btn
-            v-for="link in footerLinks"
-            class="mx-2"
-            :href="link.to"
-            icon
-            :key="link.to"
-            rel="noopener"
-            target="_blank"
-          >
-            <v-icon size="24px">{{ link.icon }}</v-icon>
-          </v-btn>
-        </v-card-text>
+    <v-footer color="teal darken-2" dark padless>
+      <v-row justify="center" no-gutters>
+        <v-btn
+          v-for="link in links.footer"
+          class="mx-4 my-2"
+          :href="link.to"
+          icon
+          :key="link.to"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <v-icon size="24px">{{ link.icon }}</v-icon>
+        </v-btn>
 
-        <v-divider></v-divider>
-
-        <v-card-text>
-          <span class="title"
-            >CCU PLUS &copy; {{ new Date().getFullYear() }}</span
-          >
-        </v-card-text>
-      </v-card>
+        <v-col class="teal darken-1 py-3 text-center" cols="12">
+          <span>CCU PLUS &copy; {{ new Date().getFullYear() }}</span>
+        </v-col>
+      </v-row>
     </v-footer>
   </v-app>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
+import { mdiCommentTextMultiple, mdiFacebookBox, mdiGithubBox, mdiLogin } from '@mdi/js';
 
 @Component
 export default class CCUPLUS extends Vue {
-  navbarLinks: object[] = [
-    {
-      icon: "fas fa-book",
-      name: "課程評論",
-      to: "courses"
-    },
-    {
-      icon: "fas fa-sign-in-alt",
-      name: "登入",
-      to: "sign-in"
-    }
-  ];
+  private links = {
+    navbar: [
+      {
+        icon: mdiCommentTextMultiple,
+        name: '課程評論',
+        to: 'courses',
+      },
+      {
+        icon: mdiLogin,
+        name: '登入',
+        to: 'sign-in',
+      },
+    ],
+    footer: [
+      {
+        icon: mdiFacebookBox,
+        to: 'https://www.facebook.com/ccu.plus',
+      },
+      {
+        icon: mdiGithubBox,
+        to: 'https://github.com/BePsvPT/CCU-Plus',
+      },
+    ],
+  };
 
-  footerLinks: object[] = [
-    {
-      icon: "fab fa-facebook",
-      to: "https://www.facebook.com/ccu.plus"
-    },
-    {
-      icon: "fab fa-github",
-      to: "https://github.com/BePsvPT/CCU-Plus"
-    }
-  ];
-
-  get isHome(): boolean {
-    return this.$route.name === "home";
+  get isHome() {
+    return this.$route.name === 'home';
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.logo {
-  height: 100%;
-  display: flex;
-  align-items: center;
-
-  a {
-    color: #ffffff;
-    text-decoration: none;
-  }
-
-  a,
-  img {
-    height: 40px;
-  }
-
-  @media screen and (max-width: 960px) {
-    a {
-      height: unset;
-    }
-  }
-}
-</style>
