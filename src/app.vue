@@ -100,7 +100,7 @@ export default class CCUPLUS extends Vue {
       },
       {
         icon: mdiGithubBox,
-        to: 'https://github.com/BePsvPT/CCU-Plus',
+        to: 'https://github.com/ccu-plus',
       },
     ],
   };
