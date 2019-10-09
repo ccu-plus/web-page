@@ -1,11 +1,13 @@
-import axios from "axios";
-import bus from "./bus";
-import store from "@/store";
+import axios from 'axios';
+import bus from './bus';
+import store from '@/store';
 
-const instance = axios.create();
+const instance = axios.create({
+  baseURL: process.env.VUE_APP_API_URL,
+});
 
 instance.interceptors.request.use(
-  config => {
+  (config) => {
     const source = axios.CancelToken.source();
 
     config.cancelToken = source.token;
@@ -15,23 +17,23 @@ instance.interceptors.request.use(
     return config;
   },
 
-  error => {
+  (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 instance.interceptors.response.use(
-  response => {
+  (response) => {
     return response;
   },
 
-  error => {
+  (error) => {
     if (error.response) {
       bus.$emit(`api-response-${error.response.status}`);
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default instance;
