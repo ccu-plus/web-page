@@ -1,6 +1,6 @@
 <template>
   <v-row justify="space-around">
-    <v-col cols="11" md="10" lg="8" xl="6">
+    <v-col cols="11" lg="9" xl="7">
       <validation-observer
         v-slot="{ invalid }"
         @submit.prevent="submit"
