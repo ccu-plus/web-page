@@ -35,7 +35,7 @@
           <v-select
             v-model="form.dimension"
             clearable
-            :disabled="loading || form.department !== '通識中心'"
+            :disabled="loading || form.department !== '通識教育中心'"
             :items="lists.dimensions"
             label="向度"
             menu-props="offsetY"
