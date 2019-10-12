@@ -134,17 +134,28 @@
         </section>
       </v-card-text>
     </v-card>
+
+    <v-divider class="mt-6 mb-3" />
+
+    <h2>
+      <v-icon large>{{ icons.mdiCommentText }}</v-icon>
+      <span class="ml-2">評論</span>
+    </h2>
+
+    <comments />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import axios from '@/libs/axios';
-import { mdiAccountMultiple, mdiCalendar, mdiHistory, mdiLibraryBooks, mdiOpenInNew, mdiSchool } from '@mdi/js';
+import Comments from './comments.vue';
+import { mdiAccountMultiple, mdiCalendar, mdiCommentText, mdiHistory, mdiLibraryBooks, mdiOpenInNew, mdiSchool } from '@mdi/js';
 import NotFound from '@/views/errors/404.vue';
 
 @Component({
   components: {
+    Comments,
     NotFound,
   },
 })
@@ -156,6 +167,7 @@ export default class Course extends Vue {
   private icons = {
     mdiAccountMultiple,
     mdiCalendar,
+    mdiCommentText,
     mdiHistory,
     mdiLibraryBooks,
     mdiOpenInNew,
