@@ -12,6 +12,10 @@ table tbody tr td {
   filter: brightness(90%);
 }
 
+.theme--dark.v-card > .v-card__text {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
 .h-full {
   height: 100%;
 }
