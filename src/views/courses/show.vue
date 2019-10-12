@@ -143,7 +143,7 @@
         <span class="ml-2">評論</span>
       </h2>
 
-      <comment-form>
+      <comment-form v-if="$store.state.signIn">
         <v-btn
           class="ml-3"
           color="success"

@@ -25,7 +25,10 @@
       <v-card-title class="subtitle-1">
         <span class="cyan--text text--darken-2">{{ comment.user || '匿名' }}</span>
 
-        <comment-form :reply="comment.user || '匿名'">
+        <comment-form
+          v-if="$store.state.signIn"
+          :reply="comment.user || '匿名'"
+        >
           <v-btn class="ml-2" icon small>
             <v-icon>{{ icons.mdiReply }}</v-icon>
           </v-btn>
