@@ -25,9 +25,11 @@
       <v-card-title class="subtitle-1">
         <span class="cyan--text text--darken-2">{{ comment.user || '匿名' }}</span>
 
-        <v-btn class="ml-2" icon small>
-          <v-icon>{{ icons.mdiReply }}</v-icon>
-        </v-btn>
+        <comment-form :reply="comment.user || '匿名'">
+          <v-btn class="ml-2" icon small>
+            <v-icon>{{ icons.mdiReply }}</v-icon>
+          </v-btn>
+        </comment-form>
 
         <div class="flex-grow-1" />
 
@@ -60,12 +62,16 @@
   </div>
 </template>
 
-
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import CommentForm from './form.vue';
 import { mdiChevronDown, mdiChevronRight, mdiReply } from '@mdi/js';
 
-@Component
+@Component({
+  components: {
+    CommentForm,
+  },
+})
 export default class Comment extends Vue {
   @Prop({ required: true }) private readonly comment!: {
     user: string | null;

@@ -137,10 +137,24 @@
 
     <v-divider class="mt-6 mb-3" />
 
-    <h2>
-      <v-icon large>{{ icons.mdiCommentText }}</v-icon>
-      <span class="ml-2">評論</span>
-    </h2>
+    <v-row align="center" no-gutters>
+      <h2>
+        <v-icon large>{{ icons.mdiCommentText }}</v-icon>
+        <span class="ml-2">評論</span>
+      </h2>
+
+      <comment-form>
+        <v-btn
+          class="ml-3"
+          color="success"
+          depressed
+          small
+        >
+          <v-icon small>{{ icons.mdiPlus }}</v-icon>
+          <span>新增評論</span>
+        </v-btn>
+      </comment-form>
+    </v-row>
 
     <comments />
   </div>
@@ -150,11 +164,22 @@
 import { Component, Vue } from 'vue-property-decorator';
 import axios from '@/libs/axios';
 import Comments from './comments.vue';
-import { mdiAccountMultiple, mdiCalendar, mdiCommentText, mdiHistory, mdiLibraryBooks, mdiOpenInNew, mdiSchool } from '@mdi/js';
+import CommentForm from './form.vue';
+import {
+  mdiAccountMultiple,
+  mdiCalendar,
+  mdiCommentText,
+  mdiHistory,
+  mdiLibraryBooks,
+  mdiOpenInNew,
+  mdiPlus,
+  mdiSchool,
+} from '@mdi/js';
 import NotFound from '@/views/errors/404.vue';
 
 @Component({
   components: {
+    CommentForm,
     Comments,
     NotFound,
   },
@@ -171,6 +196,7 @@ export default class Course extends Vue {
     mdiHistory,
     mdiLibraryBooks,
     mdiOpenInNew,
+    mdiPlus,
     mdiSchool,
   };
 
