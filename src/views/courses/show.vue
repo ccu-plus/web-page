@@ -189,7 +189,6 @@ export default class Course extends Vue {
 <style lang="scss">
 .course-info {
   padding: 1.5rem;
-  user-select: none;
 
   h3 {
     font-size: 1.2rem;
