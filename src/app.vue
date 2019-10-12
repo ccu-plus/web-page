@@ -7,39 +7,45 @@
       :fixed="isHome"
       max-height="64"
     >
-      <v-toolbar-title>
-        <router-link :to="{ name: 'home' }">
-          <v-img
-            v-if="$vuetify.breakpoint.mdAndUp"
-            alt="ccu-plus-logo"
-            contain
-            eager
-            height="40"
-            position="left center"
-            :src="require('@/assets/navbar-logo.svg')"
-            :transition="false"
-            width="154"
-          />
+      <v-row class="h-full" justify="space-around">
+        <v-col class="py-0" :cols="isHome ? 12 : 11" :lg="isHome ? 12 : 9" :xl="isHome ? 12 : 7">
+          <v-row align="center" class="h-full" :class="isHome ? 'px-4' : undefined">
+            <v-toolbar-title>
+              <router-link :to="{ name: 'home' }">
+                <v-img
+                  v-if="$vuetify.breakpoint.mdAndUp"
+                  alt="ccu-plus-logo"
+                  contain
+                  eager
+                  height="40"
+                  position="left center"
+                  :src="require('@/assets/navbar-logo.svg')"
+                  :transition="false"
+                  width="154"
+                />
 
-          <span v-else class="white--text">CCU PLUS</span>
-        </router-link>
-      </v-toolbar-title>
+                <span v-else class="white--text">CCU PLUS</span>
+              </router-link>
+            </v-toolbar-title>
 
-      <div class="flex-grow-1" />
+            <div class="flex-grow-1" />
 
-      <v-toolbar-items>
-        <v-btn
-          v-for="link in links.navbar"
-          :icon="$vuetify.breakpoint.smAndDown"
-          :key="link.to"
-          :text="$vuetify.breakpoint.mdAndUp"
-          :to="{ name: link.to }"
-        >
-          <v-icon small>{{ link.icon }}</v-icon>
+            <v-toolbar-items>
+              <v-btn
+                v-for="link in links.navbar"
+                :icon="$vuetify.breakpoint.smAndDown"
+                :key="link.to"
+                :text="$vuetify.breakpoint.mdAndUp"
+                :to="{ name: link.to }"
+              >
+                <v-icon small>{{ link.icon }}</v-icon>
 
-          <span class="ml-1 hidden-sm-and-down">{{ link.name }}</span>
-        </v-btn>
-      </v-toolbar-items>
+                <span class="ml-1 hidden-sm-and-down">{{ link.name }}</span>
+              </v-btn>
+            </v-toolbar-items>
+          </v-row>
+        </v-col>
+      </v-row>
     </v-app-bar>
 
     <v-content>
