@@ -1,121 +1,117 @@
 <template>
-  <v-row justify="space-around">
-    <v-col cols="11" md="9" xl="7" lg="5">
-      <validation-observer v-slot="{ invalid, passes }" slim>
-        <v-form @submit.prevent="passes(submit)">
-          <div class="mb-5 d-flex align-center justify-center">
-            <img
-              alt="CCU PLUS LOGO"
-              height="60"
-              :src="require('@/assets/logo.svg')"
-            />
+  <validation-observer v-slot="{ invalid, passes }" slim>
+    <v-form @submit.prevent="passes(submit)">
+      <div class="mb-5 d-flex align-center justify-center">
+        <img
+          alt="CCU PLUS LOGO"
+          height="60"
+          :src="require('@/assets/logo.svg')"
+        />
 
-            <span class="ml-2 display-2">CCU PLUS</span>
-          </div>
+        <span class="ml-2 display-2">CCU PLUS</span>
+      </div>
+
+      <validation-provider
+        v-slot="{ errors }"
+        name="帳號"
+        rules="required|max:10|min:9"
+        slim
+      >
+        <v-text-field
+          v-model="username"
+          autofocus
+          :disabled="isSignUp"
+          :error-messages="errors"
+          label="單一入口/校友系統帳號"
+          maxlength="10"
+          minlength="9"
+          :prepend-icon="icons.mdiAccountBox"
+          required
+        />
+      </validation-provider>
+
+      <validation-provider
+        v-slot="{ errors }"
+        name="密碼"
+        rules="required"
+        slim
+      >
+        <v-text-field
+          v-model="password"
+          :append-icon="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"
+          @click:append="passwordVisible = !passwordVisible"
+          :disabled="isSignUp"
+          :error-messages="errors"
+          label="單一入口/校友系統密碼"
+          :prepend-icon="icons.mdiLock"
+          required
+          :type="passwordVisible ? 'text' : 'password'"
+        />
+      </validation-provider>
+
+      <v-expand-transition>
+        <div v-if="isSignUp">
+          <p class="mt-2 subheading text-center">
+            歡迎使用 CCU PLUS，就差一步囉！
+          </p>
 
           <validation-provider
             v-slot="{ errors }"
-            name="帳號"
-            rules="required|max:10|min:9"
+            name="暱稱"
+            rules="required|max:12|min:3"
             slim
           >
             <v-text-field
-              v-model="username"
+              v-model="nickname"
               autofocus
-              :disabled="isSignUp"
               :error-messages="errors"
-              label="單一入口/校友系統帳號"
-              maxlength="10"
-              minlength="9"
-              :prepend-icon="icons.mdiAccountBox"
+              label="暱稱"
+              maxlength="12"
+              minlength="3"
+              :prepend-icon="icons.mdiAccountCardDetails"
               required
             />
           </validation-provider>
 
           <validation-provider
             v-slot="{ errors }"
-            name="密碼"
-            rules="required"
+            name="信箱"
+            rules="required|email"
             slim
           >
             <v-text-field
-              v-model="password"
-              :append-icon="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"
-              @click:append="passwordVisible = !passwordVisible"
-              :disabled="isSignUp"
+              v-model="email"
               :error-messages="errors"
-              label="單一入口/校友系統密碼"
-              :prepend-icon="icons.mdiLock"
+              label="信箱"
+              :prepend-icon="icons.mdiEmail"
               required
-              :type="passwordVisible ? 'text' : 'password'"
+              type="email"
             />
           </validation-provider>
+        </div>
+      </v-expand-transition>
 
-          <v-expand-transition>
-            <div v-if="isSignUp">
-              <p class="mt-2 subheading text-center">
-                歡迎使用 CCU PLUS，就差一步囉！
-              </p>
+      <div class="mt-3 text-center">
+        <v-btn
+          block
+          color="success"
+          :disabled="invalid"
+          :loading="false"
+          type="submit"
+        >
+          <template v-if="isSignIn">
+            <v-icon small>{{ icons.mdiLogin }}</v-icon>
+            <span class="ml-1">登入</span>
+          </template>
 
-              <validation-provider
-                v-slot="{ errors }"
-                name="暱稱"
-                rules="required|max:12|min:3"
-                slim
-              >
-                <v-text-field
-                  v-model="nickname"
-                  autofocus
-                  :error-messages="errors"
-                  label="暱稱"
-                  maxlength="12"
-                  minlength="3"
-                  :prepend-icon="icons.mdiAccountCardDetails"
-                  required
-                />
-              </validation-provider>
-
-              <validation-provider
-                v-slot="{ errors }"
-                name="信箱"
-                rules="required|email"
-                slim
-              >
-                <v-text-field
-                  v-model="email"
-                  :error-messages="errors"
-                  label="信箱"
-                  :prepend-icon="icons.mdiEmail"
-                  required
-                  type="email"
-                />
-              </validation-provider>
-            </div>
-          </v-expand-transition>
-
-          <div class="mt-3 text-center">
-            <v-btn
-              block
-              color="success"
-              :disabled="invalid"
-              :loading="false"
-              type="submit"
-            >
-              <template v-if="isSignIn">
-                <v-icon small>{{ icons.mdiLogin }}</v-icon>
-                <span class="ml-1">登入</span>
-              </template>
-
-              <template v-else-if="isSignUp">
-                <v-icon small>{{ icons.mdiAccountPlus }}</v-icon>
-                <span class="ml-1">註冊</span>
-              </template>
-            </v-btn>
-          </div>
-        </v-form>
-      </validation-observer>
-    </v-col>
-  </v-row>
+          <template v-else-if="isSignUp">
+            <v-icon small>{{ icons.mdiAccountPlus }}</v-icon>
+            <span class="ml-1">註冊</span>
+          </template>
+        </v-btn>
+      </div>
+    </v-form>
+  </validation-observer>
 </template>
 
 <script lang="ts">

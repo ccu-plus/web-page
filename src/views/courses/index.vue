@@ -1,80 +1,79 @@
 <template>
-  <v-row justify="space-around">
-    <v-col cols="11" lg="9" xl="7">
-      <validation-observer
-        v-slot="{ invalid }"
-        @submit.prevent="submit"
-        class="row"
-        tag="form"
-      >
-        <v-col cols="12" md="2">
-          <v-select
-            v-model="form.college"
-            @change="form.department = form.dimension = ''"
+  <div>
+    <validation-observer
+      v-slot="{ invalid }"
+      @submit.prevent="submit"
+      class="row"
+      tag="form"
+    >
+      <v-col cols="12" md="2">
+        <v-select
+          v-model="form.college"
+          @change="form.department = form.dimension = ''"
+          clearable
+          :disabled="loading"
+          :items="lists.colleges"
+          label="學院"
+          menu-props="offsetY"
+        />
+      </v-col>
+
+      <v-col cols="12" md="3">
+        <v-select
+          v-model="form.department"
+          @change="form.dimension = ''"
+          clearable
+          :disabled="loading"
+          :items="lists.departments"
+          label="系所"
+          menu-props="offsetY"
+        />
+      </v-col>
+
+      <v-col cols="12" md="3">
+        <v-select
+          v-model="form.dimension"
+          clearable
+          :disabled="loading || form.department !== '通識教育中心'"
+          :items="lists.dimensions"
+          label="向度"
+          menu-props="offsetY"
+        />
+      </v-col>
+
+      <v-col cols="12" md="3">
+        <validation-provider
+          v-slot="{ errors }"
+          name="搜尋字詞"
+          rules="max:16"
+          slim
+        >
+          <v-text-field
+            v-model="form.keyword"
             clearable
             :disabled="loading"
-            :items="lists.colleges"
-            label="學院"
-            menu-props="offsetY"
+            :error-messages="errors"
+            label="課程名稱、代碼/授課教授"
+            maxlength="16"
           />
-        </v-col>
+        </validation-provider>
+      </v-col>
 
-        <v-col cols="12" md="3">
-          <v-select
-            v-model="form.department"
-            @change="form.dimension = ''"
-            clearable
-            :disabled="loading"
-            :items="lists.departments"
-            label="系所"
-            menu-props="offsetY"
-          />
-        </v-col>
+      <v-col cols="12" md="1">
+        <v-btn
+          block
+          color="success"
+          :disabled="invalid"
+          :large="$vuetify.breakpoint.mdAndUp"
+          :loading="loading"
+          type="submit"
+        >
+          <v-icon>{{ icons.mdiMagnify }}</v-icon>
+        </v-btn>
+      </v-col>
+    </validation-observer>
 
-        <v-col cols="12" md="3">
-          <v-select
-            v-model="form.dimension"
-            clearable
-            :disabled="loading || form.department !== '通識教育中心'"
-            :items="lists.dimensions"
-            label="向度"
-            menu-props="offsetY"
-          />
-        </v-col>
-
-        <v-col cols="12" md="3">
-          <validation-provider
-            v-slot="{ errors }"
-            name="搜尋字詞"
-            rules="max:16"
-            slim
-          >
-            <v-text-field
-              v-model="form.keyword"
-              clearable
-              :disabled="loading"
-              :error-messages="errors"
-              label="課程名稱、代碼/授課教授"
-              maxlength="16"
-            />
-          </validation-provider>
-        </v-col>
-
-        <v-col cols="12" md="1">
-          <v-btn
-            block
-            color="success"
-            :disabled="invalid"
-            :large="$vuetify.breakpoint.mdAndUp"
-            :loading="loading"
-            type="submit"
-          >
-            <v-icon>{{ icons.mdiMagnify }}</v-icon>
-          </v-btn>
-        </v-col>
-      </validation-observer>
-
-      <v-data-table
+    <v-data-table
         class="elevation-1"
         disable-pagination
         disable-sort
@@ -122,8 +121,7 @@
           </div>
         </template>
       </v-data-table>
-    </v-col>
-  </v-row>
+  </div>
 </template>
 
 <script lang="ts">
