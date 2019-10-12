@@ -7,6 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    signIn: false,
     requests: [] as CancelTokenSource[],
     courses: [],
     search: {
@@ -18,6 +19,10 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    setSignIn(state, payload) {
+      state.signIn = payload;
+    },
+
     setCourses(state, payload) {
       state.courses = payload;
     },
