@@ -1,7 +1,8 @@
 import { extend, localize, ValidationObserver, ValidationProvider } from 'vee-validate';
-import { email, max, min, required } from 'vee-validate/dist/rules';
+import { digits, email, max, min, required } from 'vee-validate/dist/rules';
 import zhTW from 'vee-validate/dist/locale/zh_TW.json';
 
+extend('digits', digits);
 extend('email', email);
 extend('max', max);
 extend('min', min);
