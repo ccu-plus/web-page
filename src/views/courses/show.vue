@@ -177,10 +177,10 @@ export default class Course extends Vue {
 
     const base = 'https://ecourse.ccu.edu.tw/php/Courses_Admin/guest3.php';
     const courseno = `courseno=${this.course.code}_01`;
-    const year = `year=${parseInt(this.semester.name)}`;
-    const term = `term=${this.semester.name.endsWith('上')? 1 : 2}`;
+    const year = `year=${parseInt(this.semester.name, 10)}`;
+    const term = `term=${this.semester.name.endsWith('上') ? 1 : 2}`;
 
-    return `${base}?${courseno}&${year}&${term}`
+    return `${base}?${courseno}&${year}&${term}`;
   }
 
   private async created() {
