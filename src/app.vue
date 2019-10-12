@@ -33,6 +33,7 @@
             <v-toolbar-items>
               <v-btn
                 v-for="link in links.navbar"
+                v-if="(typeof link.auth !== 'boolean') || link.auth === $store.state.signIn"
                 :icon="$vuetify.breakpoint.smAndDown"
                 :key="link.to"
                 :text="$vuetify.breakpoint.mdAndUp"
@@ -88,7 +89,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { mdiCommentTextMultiple, mdiFacebookBox, mdiGithubBox, mdiLogin } from '@mdi/js';
+import { mdiCommentTextMultiple, mdiFacebookBox, mdiGithubBox, mdiLogin, mdiLogout } from '@mdi/js';
 
 @Component
 export default class CCUPLUS extends Vue {
@@ -100,9 +101,16 @@ export default class CCUPLUS extends Vue {
         to: 'courses',
       },
       {
+        auth: false,
         icon: mdiLogin,
         name: '登入',
         to: 'sign-in',
+      },
+      {
+        auth: true,
+        icon: mdiLogout,
+        name: '登出',
+        to: 'sign-out',
       },
     ],
     footer: [
