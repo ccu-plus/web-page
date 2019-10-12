@@ -91,6 +91,31 @@
         </div>
       </v-expand-transition>
 
+      <validation-provider
+        class="d-flex align-center"
+        name="驗證碼"
+        rules="required|digits:5"
+        tag="div"
+      >
+        <img
+          v-if="captcha.data"
+          @click="getCaptcha"
+          :alt="captcha.nonce"
+          :src="captcha.data"
+          style="cursor: pointer;"
+        />
+
+        <v-text-field
+          v-model="secret"
+          class="ml-2"
+          hide-details
+          label="驗證碼"
+          maxlength="5"
+          minlength="5"
+          required
+        />
+      </validation-provider>
+
       <div class="mt-3 text-center">
         <v-btn
           block
@@ -153,6 +178,10 @@ export default class SignIn extends Vue {
 
   private email = '';
 
+  private secret = '';
+
+  private captcha = {};
+
   get isSignIn() {
     return this.status === Status.SignIn;
   }
@@ -170,13 +199,25 @@ export default class SignIn extends Vue {
   }
 
   private signIn() {
-    axios.post('/auth/sign-in');
+    // axios.post('/auth/sign-in');
 
     this.status = Status.SignUp;
   }
 
   private signUp() {
     //
+  }
+
+  private async getCaptcha() {
+    const { data } = await axios.get('/captcha');
+
+    this.captcha = data;
+
+    this.secret = '';
+  }
+
+  private created() {
+    this.getCaptcha();
   }
 }
 </script>
