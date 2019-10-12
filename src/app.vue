@@ -48,7 +48,13 @@
         :class="isHome ? 'pa-0' : 'px-0'"
         fluid
       >
-        <router-view />
+        <router-view v-if="isHome" />
+
+        <v-row v-else class="h-full" justify="space-around">
+          <v-col cols="11" lg="9" xl="7">
+            <router-view />
+          </v-col>
+        </v-row>
       </v-container>
     </v-content>
 
