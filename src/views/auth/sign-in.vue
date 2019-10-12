@@ -92,6 +92,7 @@
       </v-expand-transition>
 
       <validation-provider
+        v-slot="{ errors }"
         class="d-flex align-center"
         name="驗證碼"
         rules="required|digits:5"
@@ -108,6 +109,7 @@
         <v-text-field
           v-model="secret"
           class="ml-2"
+          :error-messages="errors"
           hide-details
           label="驗證碼"
           maxlength="5"
