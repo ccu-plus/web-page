@@ -81,7 +81,7 @@
               v-else
               class="pa-0"
               height="16"
-              :href="`https://ecourse.ccu.edu.tw/php/Courses_Admin/guest3.php?courseno=${course.code}_01&year=${parseInt(semester.name)}&term=${semester.name.endsWith('上')? 1 : 2}`"
+              :href="outlineLink"
               rel="noopener noreferrer"
               target="_blank"
               text
@@ -168,6 +168,19 @@ export default class Course extends Vue {
 
   get semester() {
     return !this.course.semesters ? {} : this.course.semesters[this.semesterIdx];
+  }
+
+  get outlineLink() {
+    if (!this.course.code || !this.semester) {
+      return undefined;
+    }
+
+    const base = 'https://ecourse.ccu.edu.tw/php/Courses_Admin/guest3.php';
+    const courseno = `courseno=${this.course.code}_01`;
+    const year = `year=${parseInt(this.semester.name)}`;
+    const term = `term=${this.semester.name.endsWith('上')? 1 : 2}`;
+
+    return `${base}?${courseno}&${year}&${term}`
   }
 
   private async created() {
