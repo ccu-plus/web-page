@@ -71,6 +71,7 @@ import CommentForm from './form.vue';
 import { mdiChevronDown, mdiChevronRight, mdiReply } from '@mdi/js';
 
 @Component({
+  name: 'Comment',
   components: {
     CommentForm,
   },
