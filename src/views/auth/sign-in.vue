@@ -18,11 +18,12 @@
         slim
       >
         <v-text-field
-          v-model="username"
+          v-model="form.username"
+          @change="detectType"
           autofocus
           :disabled="isSignUp"
           :error-messages="errors"
-          label="單一入口/校友系統帳號"
+          :label="form.type === 'alumni' ? '校友系統帳號' : '單一入口帳號'"
           maxlength="10"
           minlength="9"
           :prepend-icon="icons.mdiAccountBox"
@@ -37,12 +38,12 @@
         slim
       >
         <v-text-field
-          v-model="password"
+          v-model="form.password"
           :append-icon="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"
           @click:append="passwordVisible = !passwordVisible"
           :disabled="isSignUp"
           :error-messages="errors"
-          label="單一入口/校友系統密碼"
+          :label="form.type === 'alumni' ? '校友系統密碼' : '單一入口密碼'"
           :prepend-icon="icons.mdiLock"
           required
           :type="passwordVisible ? 'text' : 'password'"
@@ -62,7 +63,7 @@
             slim
           >
             <v-text-field
-              v-model="nickname"
+              v-model="form.nickname"
               autofocus
               :error-messages="errors"
               label="暱稱"
@@ -80,7 +81,7 @@
             slim
           >
             <v-text-field
-              v-model="email"
+              v-model="form.email"
               :error-messages="errors"
               label="信箱"
               :prepend-icon="icons.mdiEmail"
@@ -100,14 +101,14 @@
       >
         <img
           v-if="captcha.data"
-          @click="getCaptcha"
+          @click="fetchCaptcha"
           :alt="captcha.nonce"
           :src="captcha.data"
           style="cursor: pointer;"
         />
 
         <v-text-field
-          v-model="secret"
+          v-model="form.captcha"
           class="ml-2"
           :error-messages="errors"
           hide-details
@@ -116,6 +117,25 @@
           minlength="5"
           required
         />
+      </validation-provider>
+
+      <validation-provider
+        v-slot="{ errors }"
+        name="登入身份"
+        rules="required|oneOf:portal,alumni"
+        slim
+      >
+        <v-radio-group
+          v-model="form.type"
+          :disabled="isSignUp"
+          :error-messages="errors"
+          hide-details
+          label="登入身份"
+          row
+        >
+          <v-radio label="在校生" value="portal"></v-radio>
+          <v-radio label="校友" value="alumni"></v-radio>
+        </v-radio-group>
       </validation-provider>
 
       <div class="mt-3 text-center">
@@ -159,6 +179,17 @@ enum Status {
   },
 })
 export default class SignIn extends Vue {
+  private captcha = {};
+
+  private form = {
+    username: '',
+    password: '',
+    nickname: '',
+    email: '',
+    type: 'portal',
+    captcha: '',
+  };
+
   private icons = {
     mdiAccountBox,
     mdiAccountCardDetails,
@@ -168,21 +199,9 @@ export default class SignIn extends Vue {
     mdiLogin,
   };
 
-  private status: Status = Status.SignIn;
-
-  private username = '';
-
-  private password = '';
-
   private passwordVisible = false;
 
-  private nickname = '';
-
-  private email = '';
-
-  private secret = '';
-
-  private captcha = {};
+  private status: Status = Status.SignIn;
 
   get isSignIn() {
     return this.status === Status.SignIn;
@@ -190,6 +209,14 @@ export default class SignIn extends Vue {
 
   get isSignUp() {
     return this.status === Status.SignUp;
+  }
+
+  private detectType() {
+    if (this.form.username.match(/^[A-Z]\d{9}$/)) {
+      this.form.type = 'alumni';
+    } else if (this.form.username.match(/^\d{9}$/)) {
+      this.form.type = 'portal';
+    }
   }
 
   private async submit() {
@@ -210,16 +237,16 @@ export default class SignIn extends Vue {
     //
   }
 
-  private async getCaptcha() {
+  private async fetchCaptcha() {
     const { data } = await axios.get('/captcha');
 
     this.captcha = data;
 
-    this.secret = '';
+    this.form.captcha = '';
   }
 
   private created() {
-    this.getCaptcha();
+    this.fetchCaptcha();
   }
 }
 </script>
