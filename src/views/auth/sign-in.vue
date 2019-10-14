@@ -19,7 +19,9 @@
       >
         <v-text-field
           v-model="form.username"
-          @change="detectType"
+          @click:append="usernameVisible = !usernameVisible"
+          @input="detectType"
+          :append-icon="form.type === 'alumni' ? (usernameVisible ? icons.mdiEyeOff : icons.mdiEye) : undefined"
           autofocus
           :disabled="isSignUp"
           :error-messages="errors"
@@ -28,6 +30,7 @@
           minlength="9"
           :prepend-icon="icons.mdiAccountBox"
           required
+          :type="(form.type === 'alumni' && !usernameVisible) ? 'password' : 'text'"
         />
       </validation-provider>
 
@@ -39,8 +42,8 @@
       >
         <v-text-field
           v-model="form.password"
-          :append-icon="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"
           @click:append="passwordVisible = !passwordVisible"
+          :append-icon="passwordVisible ? icons.mdiEyeOff : icons.mdiEye"
           :disabled="isSignUp"
           :error-messages="errors"
           :label="form.type === 'alumni' ? '校友系統密碼' : '單一入口密碼'"
@@ -101,7 +104,7 @@
       >
         <img
           v-if="captcha.data"
-          @click="fetchCaptcha"
+          @click="() => {fetchCaptcha(); $refs.captcha.focus()}"
           :alt="captcha.nonce"
           :src="captcha.data"
           style="cursor: pointer;"
@@ -115,6 +118,7 @@
           label="驗證碼"
           maxlength="5"
           minlength="5"
+          ref="captcha"
           required
         />
       </validation-provider>
@@ -165,7 +169,16 @@
 import axios from '@/libs/axios';
 import { Component, Vue } from 'vue-property-decorator';
 import { ValidationProvider, ValidationObserver } from '@/libs/validate';
-import { mdiAccountBox, mdiAccountCardDetails, mdiAccountPlus, mdiEmail, mdiLock, mdiLogin } from '@mdi/js';
+import {
+  mdiAccountBox,
+  mdiAccountCardDetails,
+  mdiAccountPlus,
+  mdiEmail,
+  mdiEye,
+  mdiEyeOff,
+  mdiLock,
+  mdiLogin,
+} from '@mdi/js';
 
 enum Status {
   SignIn,
@@ -195,6 +208,8 @@ export default class SignIn extends Vue {
     mdiAccountCardDetails,
     mdiAccountPlus,
     mdiEmail,
+    mdiEye,
+    mdiEyeOff,
     mdiLock,
     mdiLogin,
   };
@@ -202,6 +217,8 @@ export default class SignIn extends Vue {
   private passwordVisible = false;
 
   private status: Status = Status.SignIn;
+
+  private usernameVisible = false;
 
   get isSignIn() {
     return this.status === Status.SignIn;
@@ -212,9 +229,9 @@ export default class SignIn extends Vue {
   }
 
   private detectType() {
-    if (this.form.username.match(/^[A-Z]\d{9}$/)) {
+    if (this.form.username.match(/^[A-Z][12]\d+$/)) {
       this.form.type = 'alumni';
-    } else if (this.form.username.match(/^\d{9}$/)) {
+    } else if (this.form.username.match(/^\d+$/)) {
       this.form.type = 'portal';
     }
   }
