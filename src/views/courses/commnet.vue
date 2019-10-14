@@ -139,9 +139,16 @@ export default class Comment extends Vue {
     });
   }
 
-  private mounted() {
-    if (this.mentioned) {
-      this.$vuetify.goTo(this, { offset: 60 });
+  private async mounted() {
+    if (!this.mentioned) {
+      return;
+    }
+
+    // @ts-ignore
+    const offsetY: number = await this.$vuetify.goTo(this, { offset: 60 });
+
+    if (Math.abs(window.pageYOffset - offsetY) > 10) {
+      window.scrollTo(0, offsetY);
     }
   }
 }
