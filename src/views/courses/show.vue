@@ -68,6 +68,11 @@
           </section>
         </div>
 
+        <div
+          v-if="$vuetify.breakpoint.xsOnly"
+          class="my-6"
+        />
+
         <div class="d-inline-block">
           <h3>
             <v-icon>{{ icons.mdiLibraryBooks }}</v-icon>
@@ -227,11 +232,14 @@ export default class Course extends Vue {
       status,
     } = await axios.get(`/courses/${this.$route.params.code}`);
 
-    if (status === 200) {
-      this.course = data;
-      this.loading = false;
-    } else {
+    if (status !== 200) {
       this.error = true;
+    } else {
+      this.course = data;
+
+      this.loading = false;
+
+      document.title = `${this.course.name} ${this.course.code} | CCU PLUS`;
     }
   }
 }

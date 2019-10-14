@@ -15,25 +15,40 @@ export default [
     path: '/courses',
     name: 'courses',
     component: Courses,
+    meta: {
+      title: '探索課程',
+    },
   },
   {
     path: '/courses/:code',
     name: 'courses.show',
     component: CourseShow,
+    meta: {
+      title: '課程資訊',
+    },
   },
   {
     path: '/sign-in',
     name: 'sign-in',
     component: SignIn,
+    meta: {
+      title: '登入',
+    },
   },
   {
     path: '/sign-out',
     name: 'sign-out',
     component: SignOut,
+    meta: {
+      title: '登出',
+    },
   },
   {
     path: '*',
     name: '404',
     component: NotFound,
+    meta: {
+      title: '404 Not Found',
+    },
   },
 ];
