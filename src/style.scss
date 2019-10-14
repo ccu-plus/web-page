@@ -1,5 +1,9 @@
 @import '~roboto-fontface/css/roboto/roboto-fontface.css';
 
+html {
+  overflow-x: hidden;
+}
+
 a {
   text-decoration: none;
 }
