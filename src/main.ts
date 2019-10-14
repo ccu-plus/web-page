@@ -1,3 +1,4 @@
+import 'intersection-observer';
 import './style.scss';
 
 import Vue from 'vue';
