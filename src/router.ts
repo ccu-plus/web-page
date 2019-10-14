@@ -19,6 +19,12 @@ router.beforeEach((to, from, next) => {
   store.state.requests.forEach((xhr) => xhr.cancel());
   store.state.requests = [];
 
+  if (to.meta.title) {
+    document.title = `${to.meta.title} | CCU PLUS`;
+  } else {
+    document.title = 'CCU PLUS | 全新生活 由此領航';
+  }
+
   next();
 });
 
