@@ -14,6 +14,7 @@
       :class="idx ? 'mt-6' : undefined"
       :comment="comment"
       :key="idx"
+      :order="(comments.length - idx).toString(10)"
     />
 
     <v-card v-if="!loading && !comments.length" outlined>
