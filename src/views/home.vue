@@ -25,10 +25,23 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { RawLocation, Route } from 'vue-router';
+
+Component.registerHooks([
+  'beforeRouteEnter',
+]);
 
 @Component
 export default class Home extends Vue {
   private windowHeight = window.innerHeight;
+
+  public beforeRouteEnter(to: Route, from: Route, next: (to?: RawLocation) => void) {
+    if (to.hash.startsWith('#!/')) {
+      return next({ path: to.hash.substring(2), replace: true });
+    }
+
+    next();
+  }
 
   private onResize() {
     this.windowHeight = window.innerHeight;
