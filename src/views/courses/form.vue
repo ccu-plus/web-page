@@ -60,7 +60,7 @@
             >
               <img
                 v-if="captcha.data"
-                @click="fetchCaptcha"
+                @click="() => {fetchCaptcha(); $refs.captcha.focus()}"
                 :alt="captcha.nonce"
                 :src="captcha.data"
                 style="cursor: pointer;"
@@ -74,6 +74,7 @@
                 label="驗證碼"
                 maxlength="5"
                 minlength="5"
+                ref="captcha"
                 required
               />
             </validation-provider>
