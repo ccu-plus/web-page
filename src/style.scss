@@ -1,6 +1,7 @@
 @import '~roboto-fontface/css/roboto/roboto-fontface.css';
 
-html {
+html, body {
+  height: 100%;
   overflow-x: hidden;
 }
 
