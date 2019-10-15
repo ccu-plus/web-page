@@ -19,9 +19,9 @@
           <a class="ml-1" href="mailto:support@ccu.plus">support@ccu.plus</a>
         </template>
 
-        <template v-else-if="error === 422">
-          <span v-for="(msg, key) in errorBag">{{ msg }}</span>
-        </template>
+        <ul v-else-if="error === 422">
+          <li v-for="(msg, key) in errorBag">{{ msg }}</li>
+        </ul>
 
         <template v-else>
           <span>伺服器內部錯誤，請聯繫</span>
