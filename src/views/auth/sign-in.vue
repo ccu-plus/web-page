@@ -73,9 +73,7 @@
 
       <v-expand-transition>
         <div v-if="isSignUp">
-          <p class="mt-2 subheading text-center">
-            歡迎使用 CCU PLUS，就差一步囉！
-          </p>
+          <p class="mt-2 headline text-center">歡迎使用 CCU PLUS，就差一步囉！</p>
 
           <validation-provider
             v-slot="{ errors }"
