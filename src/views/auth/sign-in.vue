@@ -11,6 +11,24 @@
         <span class="ml-2 display-2">CCU PLUS</span>
       </div>
 
+      <v-alert type="error" :value="error > 0">
+        <span v-if="error === 401">帳號或密碼錯誤</span>
+
+        <template v-else-if="error === 400">
+          <span>驗證伺服器錯誤，請聯繫</span>
+          <a class="ml-1" href="mailto:support@ccu.plus">support@ccu.plus</a>
+        </template>
+
+        <template v-else-if="error === 422">
+          <span v-for="(msg, key) in errorBag">{{ msg }}</span>
+        </template>
+
+        <template v-else>
+          <span>伺服器內部錯誤，請聯繫</span>
+          <a class="ml-1" href="mailto:support@ccu.plus">support@ccu.plus</a>
+        </template>
+      </v-alert>
+
       <validation-provider
         v-slot="{ errors }"
         name="帳號"
@@ -133,8 +151,9 @@
           v-model="form.type"
           :disabled="isSignUp"
           :error-messages="errors"
-          hide-details
+          :hint="`將透過 ${form.type === 'portal' ? 'https://portal.ccu.edu.tw' : 'https://miswww1.ccu.edu.tw/alumni/alumni/'} 驗證身份`"
           label="登入身份"
+          persistent-hint
           row
         >
           <v-radio label="在校生" value="portal"></v-radio>
@@ -147,7 +166,7 @@
           block
           color="success"
           :disabled="invalid"
-          :loading="false"
+          :loading="loading"
           type="submit"
         >
           <template v-if="isSignIn">
@@ -168,7 +187,6 @@
 <script lang="ts">
 import axios from '@/libs/axios';
 import { Component, Vue } from 'vue-property-decorator';
-import { ValidationProvider, ValidationObserver } from '@/libs/validate';
 import {
   mdiAccountBox,
   mdiAccountCardDetails,
@@ -179,6 +197,8 @@ import {
   mdiLock,
   mdiLogin,
 } from '@mdi/js';
+import pick from 'lodash/pick';
+import { ValidationProvider, ValidationObserver } from '@/libs/validate';
 
 enum Status {
   SignIn,
@@ -192,7 +212,11 @@ enum Status {
   },
 })
 export default class SignIn extends Vue {
-  private captcha = {};
+  private captcha: { [key: string]: string } = {};
+
+  private error = 0;
+
+  private errorBag = {};
 
   private form = {
     username: '',
@@ -213,6 +237,8 @@ export default class SignIn extends Vue {
     mdiLock,
     mdiLogin,
   };
+
+  private loading = false;
 
   private passwordVisible = false;
 
@@ -237,17 +263,46 @@ export default class SignIn extends Vue {
   }
 
   private async submit() {
+    this.loading = true;
+
+    this.error = 0;
+
+    this.errorBag = {};
+
     if (this.isSignIn) {
-      this.signIn();
+      await this.signIn();
     } else if (this.isSignUp) {
       this.signUp();
     }
   }
 
-  private signIn() {
-    // axios.post('/auth/sign-in');
+  private async signIn() {
+    const { data: { data }, status } = await axios.post('/auth/sign-in', {
+      captcha: `${this.captcha.nonce}.${this.form.captcha}`,
+      ...pick(this.form, ['username', 'password', 'type']),
+    });
 
-    this.status = Status.SignUp;
+    if (status === 400 || status === 401 || status === 422) {
+      this.error = status;
+
+      if (status === 422) {
+        this.errorBag = data;
+      }
+    } else if (status === 200) {
+      if (!data.signedUp) {
+        this.status = Status.SignUp;
+      } else {
+        this.$store.commit('setSignIn', true);
+
+        return this.$router.push({name: 'courses'});
+      }
+    } else {
+      this.error = 500;
+    }
+
+    this.fetchCaptcha();
+
+    this.loading = false;
   }
 
   private signUp() {
