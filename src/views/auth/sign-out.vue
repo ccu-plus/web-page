@@ -28,6 +28,8 @@ export default class SignOut extends Vue {
   private created() {
     // sign out
 
+    this.$store.commit('setSignIn', false);
+
     this.$nextTick(() => this.$router.replace(this.from.path));
   }
 }
