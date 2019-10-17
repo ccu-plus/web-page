@@ -14,6 +14,8 @@
       <v-alert type="error" :value="error > 0">
         <span v-if="error === 401">帳號或密碼錯誤</span>
 
+        <span v-else-if="error === 403">閒置過久，請重新整理網頁後再嘗試</span>
+
         <template v-else-if="error === 400">
           <span>驗證伺服器錯誤，請聯繫</span>
           <a class="ml-1" href="mailto:support@ccu.plus">support@ccu.plus</a>
@@ -112,6 +114,7 @@
       </v-expand-transition>
 
       <validation-provider
+        v-if="isSignIn"
         v-slot="{ errors }"
         class="d-flex align-center"
         name="驗證碼"
@@ -140,6 +143,7 @@
       </validation-provider>
 
       <validation-provider
+        v-if="isSignIn"
         v-slot="{ errors }"
         name="登入身份"
         rules="required|oneOf:portal,alumni"
@@ -163,7 +167,7 @@
         <v-btn
           block
           color="success"
-          :disabled="invalid"
+          :disabled="error === 403 || invalid"
           :loading="loading"
           type="submit"
         >
@@ -223,6 +227,7 @@ export default class SignIn extends Vue {
     email: '',
     type: 'portal',
     captcha: '',
+    token: '',
   };
 
   private icons = {
@@ -260,7 +265,7 @@ export default class SignIn extends Vue {
     }
   }
 
-  private async submit() {
+  private submit() {
     this.loading = true;
 
     this.error = 0;
@@ -268,7 +273,7 @@ export default class SignIn extends Vue {
     this.errorBag = {};
 
     if (this.isSignIn) {
-      await this.signIn();
+      this.signIn();
     } else if (this.isSignUp) {
       this.signUp();
     }
@@ -286,25 +291,49 @@ export default class SignIn extends Vue {
       if (status === 422) {
         this.errorBag = data;
       }
-    } else if (status === 200) {
-      if (!data.signedUp) {
-        this.status = Status.SignUp;
-      } else {
-        this.$store.commit('setSignIn', true);
 
-        return this.$router.push({name: 'courses'});
+      this.fetchCaptcha();
+    } else if (status === 200) {
+      if (data.signedUp) {
+        return this.signedIn(data.token);
       }
+
+      this.status = Status.SignUp;
+      this.form.token = data.token;
     } else {
       this.error = 500;
     }
 
-    this.fetchCaptcha();
+    this.loading = false;
+  }
+
+  private async signUp() {
+    const { data: {
+      data,
+    }, status } = await axios.post('/auth/sign-up', pick(this.form, ['nickname', 'email', 'token']));
+
+    if (status === 200) {
+      return this.signedIn(data.token);
+    } else if (status === 403) {
+      this.error = status;
+    } else if (status === 422) {
+      this.error = status;
+      this.errorBag = data;
+    } else {
+      this.error = 500;
+    }
 
     this.loading = false;
   }
 
-  private signUp() {
-    //
+  private signedIn(token: string) {
+    axios.defaults.headers.common['api-token'] = token;
+
+    this.$store.commit('setSignIn', true);
+
+    this.$router.push({ name: 'courses' });
+
+    localStorage.setItem('api-token', token);
   }
 
   private async fetchCaptcha() {
