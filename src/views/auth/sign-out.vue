@@ -11,6 +11,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import axios from '@/libs/axios';
 import { Route } from 'vue-router';
 
 Component.registerHooks([
@@ -26,7 +27,9 @@ export default class SignOut extends Vue {
   }
 
   private created() {
-    // sign out
+    delete axios.defaults.headers.common['api-token'];
+
+    localStorage.removeItem('api-token');
 
     this.$store.commit('setSignIn', false);
 
