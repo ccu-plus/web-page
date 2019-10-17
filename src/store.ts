@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    signIn: false,
+    signIn: localStorage.getItem('api-token') !== null,
     requests: [] as CancelTokenSource[],
     courses: [],
     search: {
