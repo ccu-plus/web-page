@@ -148,7 +148,11 @@
         <span class="ml-2">評論</span>
       </h2>
 
-      <comment-form v-if="$store.state.signIn">
+      <comment-form
+        v-if="$store.state.signIn"
+        @created="++counter"
+        :professors="course.professors"
+      >
         <v-btn
           class="ml-3"
           color="success"
@@ -161,7 +165,7 @@
       </comment-form>
     </v-row>
 
-    <comments />
+    <comments :key="counter" />
   </div>
 </template>
 
@@ -190,6 +194,8 @@ import NotFound from '@/views/errors/404.vue';
   },
 })
 export default class Course extends Vue {
+  private counter = 0;
+
   private course: { [key: string]: any } = {};
 
   private error = false;

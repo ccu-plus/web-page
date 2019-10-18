@@ -15,7 +15,7 @@
       <v-card-title>
         <span v-if="!reply">新增評論</span>
 
-        <span v-else>回覆「{{ reply }}」的評論</span>
+        <span v-else>回覆「{{ replyTo }}」的評論</span>
 
         <v-spacer />
 
@@ -31,6 +31,14 @@
           slim
         >
           <v-form @submit.prevent="passes(submit)">
+            <v-select
+              v-if="!reply"
+              v-model="form.professor"
+              :items="professors"
+              label="受評教授"
+              menu-props="offsetY"
+            />
+
             <validation-provider
               v-slot="{ errors }"
               name="內容"
@@ -107,6 +115,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import axios from '@/libs/axios';
 import { mdiClose, mdiSend } from '@mdi/js';
+import pick from 'lodash/pick';
 import { ValidationObserver, ValidationProvider } from '@/libs/validate';
 
 @Component({
@@ -121,15 +130,21 @@ export default class CommentForm extends Vue {
     observer: any;
   };
 
+  @Prop({ default: () => [] }) private readonly professors!: [];
+
   @Prop({ default: null }) private readonly reply!: string;
 
-  private captcha = {};
+  @Prop({ default: null }) private readonly replyTo!: string;
+
+  private captcha: { [key: string]: string } = {};
 
   private dialog = false;
 
   private form = {
     content: '',
     anonymous: false,
+    professor: this.professors[0] || '',
+    reply_to: this.reply,
     captcha: '',
   };
 
@@ -159,8 +174,21 @@ export default class CommentForm extends Vue {
     });
   }
 
-  private submit() {
-    //
+  private async submit() {
+    const { data: { data }, status} = await axios.post(`/courses/${this.$route.params.code}/comments`, {
+      captcha: `${this.captcha.nonce}.${this.form.captcha}`,
+      ...pick(this.form, ['content', 'anonymous', this.reply ? 'reply_to' : 'professor']),
+    });
+
+    if (status === 422) {
+      //
+    } else if (status === 201) {
+      this.$emit('created', data);
+
+      this.dialog = false;
+    } else {
+      //
+    }
   }
 }
 </script>
