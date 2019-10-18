@@ -4,11 +4,12 @@ import store from '@/store';
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
-  headers: {
-    'api-token': localStorage.getItem('api-token'),
-  },
   validateStatus: (status) => status >= 200 && status < 500,
 });
+
+if (localStorage.getItem('api-token')) {
+  instance.defaults.headers.common['Api-Token'] = localStorage.getItem('api-token');
+}
 
 instance.interceptors.request.use(
   (config) => {
