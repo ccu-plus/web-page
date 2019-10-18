@@ -40,7 +40,9 @@
 
         <comment-form
           v-if="$store.state.signIn"
-          :reply="comment.user || '匿名'"
+          @created="comment.comments.push($event)"
+          :reply="comment.token"
+          :replyTo="comment.user || '匿名'"
         >
           <v-btn class="ml-2" icon small>
             <v-icon>{{ icons.mdiReply }}</v-icon>
@@ -98,6 +100,7 @@ export default class Comment extends Vue {
     commented_at: string;
     deleted: boolean;
     comments: [];
+    token: string;
   };
 
   @Prop({ required: true }) private readonly order!: string;
