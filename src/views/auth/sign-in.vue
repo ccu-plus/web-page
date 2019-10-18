@@ -327,13 +327,13 @@ export default class SignIn extends Vue {
   }
 
   private signedIn(token: string) {
-    axios.defaults.headers.common['api-token'] = token;
+    axios.defaults.headers.common['Api-Token'] = token;
+
+    localStorage.setItem('api-token', token);
 
     this.$store.commit('setSignIn', true);
 
     this.$router.push({ name: 'courses' });
-
-    localStorage.setItem('api-token', token);
   }
 
   private async fetchCaptcha() {
