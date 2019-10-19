@@ -72,6 +72,7 @@ import InputEmail from '@/views/auth/sign-in/inputs/email.vue';
 import InputIdentify from '@/views/auth/sign-in/inputs/identify.vue';
 import { mdiAccountPlus, mdiLogin } from '@mdi/js';
 import pick from 'lodash/pick';
+import storage from 'store';
 import { ValidationObserver } from '@/libs/validate';
 
 @Component({
@@ -177,7 +178,7 @@ export default class SignIn extends Vue {
   }
 
   private async signedIn(token: string) {
-    localStorage.setItem('api-token', token);
+    storage.set('api-token', token);
 
     axios.defaults.headers.common['Api-Token'] = token;
 
