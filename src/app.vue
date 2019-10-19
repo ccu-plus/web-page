@@ -34,6 +34,7 @@
               <v-btn
                 v-for="link in links.navbar"
                 v-if="(typeof link.auth !== 'boolean') || link.auth === $store.state.signIn"
+                exact
                 :icon="$vuetify.breakpoint.smAndDown"
                 :key="link.to"
                 :text="$vuetify.breakpoint.mdAndUp"
@@ -89,12 +90,19 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { mdiCommentTextMultiple, mdiFacebookBox, mdiGithubBox, mdiLogin, mdiLogout } from '@mdi/js';
+import axios from '@/libs/axios';
+import { mdiAccount, mdiCommentTextMultiple, mdiFacebookBox, mdiGithubBox, mdiLogin, mdiLogout } from '@mdi/js';
 
 @Component
 export default class CCUPLUS extends Vue {
   private links = {
     navbar: [
+      {
+        auth: true,
+        icon: mdiAccount,
+        name: this.$store.state.profile.nickname,
+        to: 'profile',
+      },
       {
         icon: mdiCommentTextMultiple,
         name: '課程評論',
@@ -127,6 +135,14 @@ export default class CCUPLUS extends Vue {
 
   get isHome() {
     return this.$route.name === 'home';
+  }
+
+  private async created() {
+    if (this.$store.state.signIn) {
+      const { data: { data } } = await axios.get('/account/profile');
+
+      this.$store.commit('setProfile', data);
+    }
   }
 }
 </script>
