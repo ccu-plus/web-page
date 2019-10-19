@@ -1,5 +1,6 @@
 import axios from '@/libs/axios';
 import { CancelTokenSource } from 'axios';
+import storage from 'store';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -9,7 +10,7 @@ export default new Vuex.Store({
   state: {
     requests: [] as CancelTokenSource[],
 
-    signIn: localStorage.getItem('api-token') !== null,
+    signIn: !!storage.get('api-token'),
 
     profile: {
       nickname: '',

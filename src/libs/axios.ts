@@ -1,4 +1,5 @@
 import axios from 'axios';
+import storage from 'store';
 import store from '@/store';
 
 const instance = axios.create({
@@ -6,8 +7,10 @@ const instance = axios.create({
   validateStatus: (status) => status >= 200 && status < 500,
 });
 
-if (localStorage.getItem('api-token')) {
-  instance.defaults.headers.common['Api-Token'] = localStorage.getItem('api-token');
+const token = storage.get('api-token');
+
+if (token) {
+  instance.defaults.headers.common['Api-Token'] = token;
 }
 
 instance.interceptors.request.use(
