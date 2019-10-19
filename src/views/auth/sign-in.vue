@@ -113,34 +113,11 @@
         </div>
       </v-expand-transition>
 
-      <validation-provider
-        v-if="isSignIn"
-        v-slot="{ errors }"
-        class="d-flex align-center"
-        name="驗證碼"
-        rules="required|digits:5"
-        tag="div"
-      >
-        <img
-          v-if="captcha.data"
-          @click="() => {fetchCaptcha(); $refs.captcha.focus()}"
-          :alt="captcha.nonce"
-          :src="captcha.data"
-          style="cursor: pointer;"
-        />
-
-        <v-text-field
-          v-model="form.captcha"
-          class="ml-2"
-          :error-messages="errors"
-          hide-details
-          label="驗證碼"
-          maxlength="5"
-          minlength="5"
-          ref="captcha"
-          required
-        />
-      </validation-provider>
+      <captcha-input
+        v-model="form.captcha"
+        @nonce="(val) => (form.nonce = val)"
+        :refresh="error"
+      />
 
       <validation-provider
         v-if="isSignIn"
@@ -187,8 +164,9 @@
 </template>
 
 <script lang="ts">
-import axios from '@/libs/axios';
 import { Component, Vue } from 'vue-property-decorator';
+import axios from '@/libs/axios';
+import CaptchaInput from '@/components/captcha-input.vue';
 import {
   mdiAccountBox,
   mdiAccountCardDetails,
@@ -209,13 +187,12 @@ enum Status {
 
 @Component({
   components: {
+    CaptchaInput,
     ValidationProvider,
     ValidationObserver,
   },
 })
 export default class SignIn extends Vue {
-  private captcha: { [key: string]: string } = {};
-
   private error = 0;
 
   private errorBag = {};
@@ -226,6 +203,7 @@ export default class SignIn extends Vue {
     nickname: '',
     email: '',
     type: 'portal',
+    nonce: '',
     captcha: '',
     token: '',
   };
@@ -281,7 +259,7 @@ export default class SignIn extends Vue {
 
   private async signIn() {
     const { data: { data }, status } = await axios.post('/auth/sign-in', {
-      captcha: `${this.captcha.nonce}.${this.form.captcha}`,
+      captcha: `${this.form.nonce}.${this.form.captcha}`,
       ...pick(this.form, ['username', 'password', 'type']),
     });
 
@@ -291,8 +269,6 @@ export default class SignIn extends Vue {
       if (status === 422) {
         this.errorBag = data;
       }
-
-      this.fetchCaptcha();
     } else if (status === 200) {
       if (data.signedUp) {
         return this.signedIn(data.token);
@@ -334,18 +310,6 @@ export default class SignIn extends Vue {
     this.$store.commit('setSignIn', true);
 
     this.$router.push({ name: 'courses' });
-  }
-
-  private async fetchCaptcha() {
-    const { data } = await axios.get('/captcha');
-
-    this.captcha = data;
-
-    this.form.captcha = '';
-  }
-
-  private created() {
-    this.fetchCaptcha();
   }
 }
 </script>
