@@ -33,7 +33,7 @@
             <v-toolbar-items>
               <v-btn
                 v-for="link in links.navbar"
-                v-if="(typeof link.auth !== 'boolean') || link.auth === $store.state.signIn"
+                v-if="(typeof link.auth !== 'boolean') || link.auth === signIn"
                 exact
                 :icon="$vuetify.breakpoint.smAndDown"
                 :key="link.to"
@@ -95,50 +95,56 @@ import { mdiAccount, mdiCommentTextMultiple, mdiFacebookBox, mdiGithubBox, mdiLo
 
 @Component
 export default class CCUPLUS extends Vue {
-  private links = {
-    navbar: [
-      {
-        auth: true,
-        icon: mdiAccount,
-        name: this.$store.state.profile.nickname,
-        to: 'profile',
-      },
-      {
-        icon: mdiCommentTextMultiple,
-        name: '課程評論',
-        to: 'courses',
-      },
-      {
-        auth: false,
-        icon: mdiLogin,
-        name: '登入',
-        to: 'sign-in',
-      },
-      {
-        auth: true,
-        icon: mdiLogout,
-        name: '登出',
-        to: 'sign-out',
-      },
-    ],
-    footer: [
-      {
-        icon: mdiFacebookBox,
-        to: 'https://www.facebook.com/ccu.plus',
-      },
-      {
-        icon: mdiGithubBox,
-        to: 'https://github.com/ccu-plus',
-      },
-    ],
-  };
-
   get isHome() {
     return this.$route.name === 'home';
   }
 
+  get links() {
+    return {
+      navbar: [
+        {
+          auth: true,
+          icon: mdiAccount,
+          name: this.$store.state.profile.nickname,
+          to: 'profile',
+        },
+        {
+          icon: mdiCommentTextMultiple,
+          name: '課程評論',
+          to: 'courses',
+        },
+        {
+          auth: false,
+          icon: mdiLogin,
+          name: '登入',
+          to: 'sign-in',
+        },
+        {
+          auth: true,
+          icon: mdiLogout,
+          name: '登出',
+          to: 'sign-out',
+        },
+      ],
+      footer: [
+        {
+          icon: mdiFacebookBox,
+          to: 'https://www.facebook.com/ccu.plus',
+        },
+        {
+          icon: mdiGithubBox,
+          to: 'https://github.com/ccu-plus',
+        },
+      ],
+    };
+  }
+
+  get signIn() {
+    return this.$store.state.signIn;
+  }
+
   private async created() {
-    if (this.$store.state.signIn) {
+    if (this.signIn) {
       const { data: { data } } = await axios.get('/account/profile');
 
       this.$store.commit('setProfile', data);
