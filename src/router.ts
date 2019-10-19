@@ -1,4 +1,3 @@
-import bus from '@/libs/bus';
 import Router from 'vue-router';
 import routes from './routes';
 import store from './store';
@@ -26,10 +25,6 @@ router.beforeEach((to, from, next) => {
   }
 
   next();
-});
-
-bus.$on('api-response-404', () => {
-  //
 });
 
 export default router;
