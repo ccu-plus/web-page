@@ -26,8 +26,8 @@ export default class SignOut extends Vue {
     next((vm) => vm.from = from);
   }
 
-  private created() {
-    axios.post('/auth/sign-out');
+  private async mounted() {
+    await axios.post('/auth/sign-out');
 
     delete axios.defaults.headers.common['api-token'];
 
@@ -35,7 +35,7 @@ export default class SignOut extends Vue {
 
     this.$store.commit('setSignIn', false);
 
-    this.$router.replace(this.from ? this.from.path : { name: 'courses' });
+    await this.$router.replace(this.from ? this.from.path : { name: 'courses' });
   }
 }
 </script>
