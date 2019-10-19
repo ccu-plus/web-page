@@ -176,10 +176,14 @@ export default class SignIn extends Vue {
     this.loading = false;
   }
 
-  private signedIn(token: string) {
+  private async signedIn(token: string) {
+    localStorage.setItem('api-token', token);
+
     axios.defaults.headers.common['Api-Token'] = token;
 
-    localStorage.setItem('api-token', token);
+    const { data: { data } } = await axios.get('/account/profile');
+
+    this.$store.commit('setProfile', data);
 
     this.$store.commit('setSignIn', true);
 
