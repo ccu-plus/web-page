@@ -125,6 +125,7 @@
     <v-card
       v-for="comment in comments"
       class="mt-6"
+      :key="`${comment.course.code}-${comment.commented_at}`"
       outlined
       tag="section"
     >
