@@ -15,6 +15,7 @@
     "intersection-observer": "^0.7.0",
     "lodash": "^4.17.15",
     "roboto-fontface": "^0.10.0",
+    "store": "^2.0.12",
     "vee-validate": "^3.0.11",
     "vue": "^2.6.8",
     "vue-class-component": "^7.0.1",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.142",
+    "@types/store": "^2.0.2",
     "@vue/cli-plugin-babel": "^4.0.0-rc.7",
     "@vue/cli-plugin-typescript": "^4.0.0-rc.7",
     "@vue/cli-service": "^4.0.0-rc.7",
