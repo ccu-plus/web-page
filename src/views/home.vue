@@ -2,18 +2,16 @@
   <v-parallax
     v-resize="onResize"
     :height="windowHeight"
-    :src="require('@/assets/home-cover.jpg')"
+    :src="require('@/assets/home-cover.webp')"
+    ref="parallax"
   >
     <v-row align="center">
       <v-col class="text-center">
-        <v-img
-          alt="CCU PLUS LOGO"
-          contain
-          eager
-          height="230"
-          :src="require('@/assets/logo.svg')"
-          :transition="false"
-        />
+        <picture>
+          <source :srcset="require('@/assets/logo.webp')" type="image/webp">
+
+          <img alt="logo" height="230" :src="require('@/assets/logo.svg')">
+        </picture>
 
         <h1 class="display-3 mt-3">CCU PLUS</h1>
 
@@ -45,6 +43,11 @@ export default class Home extends Vue {
 
   private onResize() {
     this.windowHeight = window.innerHeight;
+  }
+
+  private mounted() {
+    // @ts-ignore
+    this.$refs.parallax.$refs.img.addEventListener('error', (event: Event) => (event.target.src = require('@/assets/home-cover.jpg')));
   }
 }
 </script>
