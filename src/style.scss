@@ -14,20 +14,24 @@ table tbody tr td {
   padding: 6px 16px !important;
 }
 
-.v-toolbar__content, .v-toolbar__extension {
-  padding: 0 16px !important;
+.v-icon.v-alert__icon {
+  align-self: center !important;
+}
+
+.v-input--radio-group .v-input__control .v-input__slot {
+  margin-bottom: 0 !important;
 }
 
 .v-parallax .v-parallax__image {
   filter: brightness(90%);
 }
 
-.theme--dark.v-card > .v-card__text {
-  color: rgba(255, 255, 255, 0.9) !important;
+.v-toolbar__content, .v-toolbar__extension {
+  padding: 0 16px !important;
 }
 
-.v-input--radio-group .v-input__control .v-input__slot {
-  margin-bottom: 0 !important;
+.theme--dark.v-card > .v-card__text {
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .h-full {
