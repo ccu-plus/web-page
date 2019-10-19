@@ -26,18 +26,11 @@ module.exports = {
   configureWebpack: {
     optimization: {
       splitChunks: {
-        cacheGroups: {
-          coreJs: {
-            chunks: 'all',
-            name: 'chunk-core-js',
-            test: /[\\/]node_modules[\\/](core-js|core-js-pure)[\\/]/,
-          },
-          vuetify: {
-            chunks: 'all',
-            name: 'chunk-vuetify',
-            test: /[\\/]node_modules[\\/]vuetify[\\/]/,
-          },
-        }
+        chunks: 'all',
+        maxAsyncRequests: 8,
+        maxInitialRequests: 5,
+        maxSize: 262144,
+        minSize: 131072,
       }
     },
     plugins,
