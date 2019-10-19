@@ -7,9 +7,18 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    signIn: localStorage.getItem('api-token') !== null,
     requests: [] as CancelTokenSource[],
+
+    signIn: localStorage.getItem('api-token') !== null,
+
+    profile: {
+      nickname: '',
+      email: '',
+      verified: false,
+    },
+
     courses: [],
+
     search: {
       college: '',
       department: '',
@@ -21,6 +30,10 @@ export default new Vuex.Store({
   mutations: {
     setSignIn(state, payload) {
       state.signIn = payload;
+    },
+
+    setProfile(state, payload) {
+      state.profile = payload;
     },
 
     setCourses(state, payload) {
