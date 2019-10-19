@@ -33,3 +33,11 @@ table tbody tr td {
 .h-full {
   height: 100%;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.no-select {
+  user-select: none;
+}
