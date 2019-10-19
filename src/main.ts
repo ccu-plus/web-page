@@ -10,7 +10,7 @@ import vuetify from './plugins/vuetify';
 Vue.config.productionTip = false;
 
 new Vue({
-  name: 'CCUPLUS',
+  name: 'CCU-PLUS',
   router,
   store,
   vuetify,
