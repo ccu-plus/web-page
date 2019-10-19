@@ -6,6 +6,7 @@
           alt="CCU PLUS LOGO"
           height="60"
           :src="require('@/assets/logo.svg')"
+          width="60"
         />
 
         <span class="ml-2 display-2">CCU PLUS</span>
