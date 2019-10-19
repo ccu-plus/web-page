@@ -59,33 +59,10 @@
               />
             </validation-provider>
 
-            <validation-provider
-              v-slot="{ errors }"
-              class="d-flex align-center"
-              name="驗證碼"
-              rules="required|digits:5"
-              tag="div"
-            >
-              <img
-                v-if="captcha.data"
-                @click="() => {fetchCaptcha(); $refs.captcha.focus()}"
-                :alt="captcha.nonce"
-                :src="captcha.data"
-                style="cursor: pointer;"
-              />
-
-              <v-text-field
-                v-model="form.captcha"
-                class="ml-2"
-                :error-messages="errors"
-                hide-details
-                label="驗證碼"
-                maxlength="5"
-                minlength="5"
-                ref="captcha"
-                required
-              />
-            </validation-provider>
+            <captcha-input
+              v-model="form.captcha"
+              @nonce="(val) => (form.nonce = val)"
+            />
 
             <v-checkbox
               v-model="form.anonymous"
@@ -114,12 +91,14 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import axios from '@/libs/axios';
+import CaptchaInput from '@/components/captcha-input.vue';
 import { mdiClose, mdiSend } from '@mdi/js';
 import pick from 'lodash/pick';
 import { ValidationObserver, ValidationProvider } from '@/libs/validate';
 
 @Component({
   components: {
+    CaptchaInput,
     ValidationObserver,
     ValidationProvider,
   },
@@ -130,13 +109,11 @@ export default class CommentForm extends Vue {
     observer: any;
   };
 
-  @Prop({ default: () => [] }) private readonly professors!: [];
+  @Prop({ default: () => [] }) private readonly professors!: string[];
 
   @Prop({ default: null }) private readonly reply!: string;
 
   @Prop({ default: null }) private readonly replyTo!: string;
-
-  private captcha: { [key: string]: string } = {};
 
   private dialog = false;
 
@@ -145,6 +122,7 @@ export default class CommentForm extends Vue {
     anonymous: false,
     professor: this.professors[0] || '',
     reply_to: this.reply,
+    nonce: '',
     captcha: '',
   };
 
@@ -155,17 +133,7 @@ export default class CommentForm extends Vue {
 
   private loading = false;
 
-  private async fetchCaptcha() {
-    const { data } = await axios.get('/captcha');
-
-    this.captcha = data;
-
-    this.form.captcha = '';
-  }
-
   private open() {
-    this.fetchCaptcha();
-
     this.dialog = true;
 
     requestAnimationFrame(() => {
@@ -176,7 +144,7 @@ export default class CommentForm extends Vue {
 
   private async submit() {
     const { data: { data }, status} = await axios.post(`/courses/${this.$route.params.code}/comments`, {
-      captcha: `${this.captcha.nonce}.${this.form.captcha}`,
+      captcha: `${this.form.nonce}.${this.form.captcha}`,
       ...pick(this.form, ['content', 'anonymous', this.reply ? 'reply_to' : 'professor']),
     });
 
