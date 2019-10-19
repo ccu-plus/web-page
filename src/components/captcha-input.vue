@@ -9,10 +9,11 @@
     <captcha
       @click="() => $refs.input.focus()"
       @nonce="(val) => $emit('nonce', val)"
+      :update="refresh"
     />
 
     <v-text-field
-      v-model="value"
+      v-model="secret"
       @focus="(event) => event.target.select()"
       @input="(val) => $emit('input', val)"
       class="ml-2 mt-0"
@@ -28,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import Captcha from '@/components/captcha.vue';
 import { ValidationProvider } from '@/libs/validate';
 
@@ -39,6 +40,8 @@ import { ValidationProvider } from '@/libs/validate';
   },
 })
 export default class CaptchaInput extends Vue {
-  private value = '';
+  @Prop() private readonly refresh!: any;
+
+  private secret = '';
 }
 </script>

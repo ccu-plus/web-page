@@ -32,11 +32,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import axios from '@/libs/axios';
 
 @Component
 export default class Captcha extends Vue {
+  @Prop() private readonly update!: any;
+
   private error = false;
 
   private image = '';
@@ -47,7 +49,9 @@ export default class Captcha extends Vue {
 
   private timeoutId = 0;
 
-  public async refresh() {
+  @Watch('update') private onValueChanged = this.refresh;
+
+  private async refresh() {
     if (this.loading) {
       return;
     }
