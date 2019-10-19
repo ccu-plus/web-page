@@ -30,6 +30,7 @@
         </v-expand-transition>
 
         <captcha-input
+          v-if="isSignIn"
           v-model="form.captcha"
           @nonce="(val) => (form.nonce = val)"
           :refresh="submits"
@@ -37,6 +38,7 @@
 
         <input-identify
           v-model="form.type"
+          :class="isSignIn ? 'mt-2' : 'mt-0'"
           :disabled="!isSignIn"
         />
 
