@@ -1,7 +1,7 @@
 import axios from '@/libs/axios';
+import { CancelTokenSource } from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { CancelTokenSource } from 'axios';
 
 Vue.use(Vuex);
 

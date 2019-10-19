@@ -9,13 +9,12 @@ const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior(to, from, savedPosition) {
-    return savedPosition || { x: 0, y: 0 };
-  },
+  scrollBehavior: (to, from, position) => (position || { x: 0, y: 0 }),
 });
 
 router.beforeEach((to, from, next) => {
   store.state.requests.forEach((xhr) => xhr.cancel());
+
   store.state.requests = [];
 
   if (to.meta.title) {
