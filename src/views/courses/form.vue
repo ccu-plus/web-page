@@ -120,7 +120,7 @@ export default class CommentForm extends Vue {
   private form = {
     content: '',
     anonymous: false,
-    professor: this.professors[0] || '',
+    professor: '',
     reply_to: this.reply,
     nonce: '',
     captcha: '',
@@ -135,6 +135,10 @@ export default class CommentForm extends Vue {
 
   private open() {
     this.dialog = true;
+
+    if (!this.form.professor.length && this.professors.length) {
+      this.form.professor = this.professors[0];
+    }
 
     requestAnimationFrame(() => {
       this.$refs.observer.reset();
