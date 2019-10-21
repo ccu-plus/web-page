@@ -42,6 +42,10 @@ export default [
     },
   },
   {
+    path: '/sign-up',
+    redirect: { name: 'sign-in' },
+  },
+  {
     path: '/sign-out',
     name: 'sign-out',
     component: SignOut,
