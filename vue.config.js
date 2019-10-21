@@ -2,7 +2,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const CompressionPlugin = require('compression-webpack-plugin');
 
 const plugins = [
-  // new BundleAnalyzerPlugin(),
+  // new BundleAnalyzerPlugin({ analyzerPort: 'auto' }),
 ];
 
 if (process.env.NODE_ENV === 'production') {
@@ -27,10 +27,10 @@ module.exports = {
     optimization: {
       splitChunks: {
         chunks: 'all',
-        maxAsyncRequests: 8,
-        maxInitialRequests: 5,
-        maxSize: 262144,
-        minSize: 131072,
+        maxAsyncRequests: 6,
+        maxInitialRequests: 6,
+        maxSize: 131072,
+        minSize: 98304,
       }
     },
     plugins,
