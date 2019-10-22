@@ -243,9 +243,9 @@ export default class Course extends Vue {
     } else {
       this.course = data;
 
-      this.loading = false;
-
       document.title = `${this.course.name} ${this.course.code} | CCU PLUS`;
+
+      this.loading = false;
     }
   }
 }
