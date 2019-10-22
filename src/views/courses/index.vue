@@ -174,8 +174,6 @@ import { ValidationProvider, ValidationObserver } from '@/libs/validate';
   },
 })
 export default class Courses extends Vue {
-  private comments = [];
-
   private form = this.$store.state.search;
 
   private icons = {
@@ -186,6 +184,10 @@ export default class Courses extends Vue {
   private loading = false;
 
   private searched = false;
+
+  get comments() {
+    return this.$store.state.comments;
+  }
 
   get headers() {
     const headers = [
@@ -223,9 +225,13 @@ export default class Courses extends Vue {
   }
 
   private async created() {
+    if (this.comments.length) {
+      return;
+    }
+
     const { data: { data } } = await axios.get('/courses/comments');
 
-    this.comments = data;
+    this.$store.commit('setComments', data);
   }
 }
 </script>
