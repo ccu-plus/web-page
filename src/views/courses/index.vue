@@ -12,6 +12,7 @@
           @change="form.department = form.dimension = ''"
           clearable
           :disabled="loading"
+          hide-details
           :items="lists.colleges"
           label="學院"
           menu-props="offsetY"
@@ -24,6 +25,7 @@
           @change="form.dimension = ''"
           clearable
           :disabled="loading"
+          hide-details
           :items="lists.departments"
           label="系所"
           menu-props="offsetY"
@@ -35,6 +37,7 @@
           v-model="form.dimension"
           clearable
           :disabled="loading || form.department !== '通識教育中心'"
+          hide-details
           :items="lists.dimensions"
           label="向度"
           menu-props="offsetY"
@@ -53,6 +56,7 @@
             clearable
             :disabled="loading"
             :error-messages="errors"
+            hide-details
             label="課程名稱、代碼/授課教授"
             maxlength="16"
           />
@@ -74,11 +78,12 @@
     </validation-observer>
 
     <v-data-table
-      class="elevation-1"
+      class="elevation-1 mt-3"
       disable-pagination
       disable-sort
       :headers="headers"
       hide-default-footer
+      :hide-default-header="$vuetify.breakpoint.xsOnly"
       :items="$store.state.courses"
       :loading="loading"
       no-data-text="探索，帶來無限可能"
@@ -98,11 +103,11 @@
 
       <template v-slot:item.professors="{ item: { professors } }">
         <span
-          v-for="professor in professors.slice(0, 3)"
+          v-for="professor in professors.slice(0, maxProfessors)"
           class="d-block"
         >{{ professor }}</span>
 
-        <span v-if="professors.length > 3">……</span>
+        <span v-if="professors.length > maxProfessors">……</span>
       </template>
 
       <template v-if="searched" v-slot:footer>
@@ -212,6 +217,10 @@ export default class Courses extends Vue {
       departments: Departments[this.form.college] || [],
       dimensions: Dimensions,
     };
+  }
+
+  get maxProfessors() {
+    return this.$vuetify.breakpoint.xsOnly ? 2 : 3;
   }
 
   private async submit() {
