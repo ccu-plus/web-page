@@ -20,6 +20,8 @@ export default new Vuex.Store({
 
     courses: [],
 
+    comments: [],
+
     search: {
       college: '',
       department: '',
@@ -39,6 +41,10 @@ export default new Vuex.Store({
 
     setCourses(state, payload) {
       state.courses = payload;
+    },
+
+    setComments(state, payload) {
+      state.comments = payload;
     },
   },
 
