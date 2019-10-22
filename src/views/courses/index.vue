@@ -127,9 +127,14 @@
       </template>
     </v-data-table>
 
+    <h2 class="headline mt-6">
+      <v-icon large>{{ icons.mdiCommentText }}</v-icon>
+      <span class="ml-2">最新評論</span>
+    </h2>
+
     <v-card
       v-for="comment in comments"
-      class="mt-6"
+      class="mt-5"
       :key="`${comment.course.code}-${comment.commented_at}`"
       outlined
       tag="section"
@@ -169,7 +174,7 @@ import axios from '@/libs/axios';
 import Colleges from '@/libs/colleges';
 import Departments from '@/libs/departments';
 import Dimensions from '@/libs/dimensions';
-import { mdiMagnify, mdiNewBox } from '@mdi/js';
+import { mdiCommentText, mdiMagnify, mdiNewBox } from '@mdi/js';
 import { ValidationProvider, ValidationObserver } from '@/libs/validate';
 
 @Component({
@@ -182,6 +187,7 @@ export default class Courses extends Vue {
   private form = this.$store.state.search;
 
   private icons = {
+    mdiCommentText,
     mdiMagnify,
     mdiNewBox,
   };
