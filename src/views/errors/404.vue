@@ -4,3 +4,12 @@
     <span class="pa-4 display-1 font-weight-light">Not Found</span>
   </v-row>
 </template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
+@Component
+export default class NotFound extends Vue {
+  //
+}
+</script>
