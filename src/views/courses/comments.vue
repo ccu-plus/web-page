@@ -20,7 +20,7 @@
     <v-card v-if="!loading && !comments.length" outlined>
       <v-card-text class="text-center title">
         <span v-if="$store.state.signIn">您上過這堂課嗎？點擊留言按鈕，成為第一位分享者吧！</span>
-        <span v-else>目前此課程還沒有評論喔！</span>
+        <span v-else>目前此課程尚無評論！</span>
       </v-card-text>
     </v-card>
   </article>
