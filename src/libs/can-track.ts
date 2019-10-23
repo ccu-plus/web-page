@@ -13,8 +13,6 @@ if (window.navigator && (window.navigator.doNotTrack === '1' || window.navigator
   }
 }
 
-canTrack = true;
-
 if (canTrack) {
   if (!storage.get('tracker')) {
     let uid = Date.now().toString(16);
