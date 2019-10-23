@@ -127,7 +127,7 @@ export default class Comment extends Vue {
   }
 
   private copy() {
-    clearTimeout(this.tooltipTimeoutID);
+    window.clearTimeout(this.tooltipTimeoutID);
 
     this.tooltip = false;
 
@@ -138,7 +138,7 @@ export default class Comment extends Vue {
     requestAnimationFrame(() => {
       this.tooltip = true;
 
-      this.tooltipTimeoutID = setTimeout(() => this.tooltip = false, 1500);
+      this.tooltipTimeoutID = window.setTimeout(() => this.tooltip = false, 1500);
     });
   }
 

@@ -56,7 +56,7 @@ export default class Captcha extends Vue {
       return;
     }
 
-    clearTimeout(this.timeoutId);
+    window.clearTimeout(this.timeoutId);
 
     const { data, status } = await this.fetch();
 
@@ -68,7 +68,7 @@ export default class Captcha extends Vue {
       this.$emit('nonce', this.nonce = data.nonce);
 
       // Captcha 有效期限為 10 分鐘，每十分鐘須更新一次
-      this.timeoutId = setTimeout(this.refresh, 10 * 60 * 1000);
+      this.timeoutId = window.setTimeout(this.refresh, 10 * 60 * 1000);
     }
   }
 
@@ -87,7 +87,7 @@ export default class Captcha extends Vue {
   }
 
   private beforeDestroy() {
-    clearTimeout(this.timeoutId);
+    window.clearTimeout(this.timeoutId);
   }
 }
 </script>
