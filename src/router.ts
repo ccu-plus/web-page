@@ -1,5 +1,6 @@
 import Router from 'vue-router';
 import routes from './routes';
+import track from '@/libs/track';
 import Vue from 'vue';
 
 Vue.use(Router);
@@ -19,6 +20,10 @@ router.beforeEach((to, from, next) => {
   }
 
   next();
+});
+
+router.afterEach((to) => {
+  track(to.fullPath, { type: 'pageview' });
 });
 
 export default router;
