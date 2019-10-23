@@ -176,6 +176,7 @@ import Departments from '@/libs/departments';
 import Dimensions from '@/libs/dimensions';
 import { mdiCommentText, mdiMagnify, mdiNewBox } from '@mdi/js';
 import { ValidationProvider, ValidationObserver } from '@/libs/validate';
+import track from '@/libs/track';
 
 @Component({
   components: {
@@ -184,7 +185,7 @@ import { ValidationProvider, ValidationObserver } from '@/libs/validate';
   },
 })
 export default class Courses extends Vue {
-  private form = this.$store.state.search;
+  private form: { [key: string]: string } = this.$store.state.search;
 
   private icons = {
     mdiCommentText,
@@ -233,6 +234,12 @@ export default class Courses extends Vue {
     this.loading = true;
 
     await this.$store.dispatch('search', this.form);
+
+    track(this.$route.fullPath, {
+      type: 'search',
+      search: Object.values(this.form).filter((v) => v.length).join(' '),
+      count: this.$store.state.courses.length,
+    });
 
     this.loading = false;
 
