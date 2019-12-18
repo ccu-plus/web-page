@@ -36,6 +36,6 @@ module.exports = {
     plugins,
   },
   integrity: true,
-  productionSourceMap: false,
+  productionSourceMap: true,
   transpileDependencies: ['vuetify']
 };
