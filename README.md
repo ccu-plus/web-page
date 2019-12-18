@@ -4,4 +4,4 @@ CCU PLUS for National Chung Cheng University.
 
 ## Version
 
-1.0.4
+1.0.5
