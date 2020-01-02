@@ -66,10 +66,11 @@
       </v-container>
     </v-content>
 
-    <v-footer color="teal darken-2" dark padless>
+    <v-footer color="teal darken-3" dark padless>
       <v-row justify="center" no-gutters>
         <v-btn
           v-for="link in links.footer"
+          :aria-label="link.label"
           class="mx-4 my-2"
           :href="link.to"
           icon
@@ -80,7 +81,7 @@
           <v-icon size="24px">{{ link.icon }}</v-icon>
         </v-btn>
 
-        <v-col class="teal darken-1 py-3 text-center" cols="12">
+        <v-col class="teal darken-4 py-3 text-center" cols="12">
           <span>CCU PLUS &copy; {{ new Date().getFullYear() }}</span>
         </v-col>
       </v-row>
@@ -129,10 +130,12 @@ export default class CCUPLUS extends Vue {
       footer: [
         {
           icon: mdiFacebookBox,
+          label: 'Facebook Page',
           to: 'https://www.facebook.com/ccu.plus',
         },
         {
           icon: mdiGithubBox,
+          label: 'GitHub Repository',
           to: 'https://github.com/ccu-plus',
         },
       ],
