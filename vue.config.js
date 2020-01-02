@@ -29,7 +29,7 @@ module.exports = {
         chunks: 'all',
         maxAsyncRequests: 6,
         maxInitialRequests: 6,
-        maxSize: 131072,
+        maxSize: 262144,
         minSize: 98304,
       }
     },
