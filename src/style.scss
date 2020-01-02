@@ -1,5 +1,9 @@
 @import '~roboto-fontface/css/roboto/roboto-fontface.css';
 
+@font-face {
+  font-display: swap;
+}
+
 html, body {
   margin: 0;
   padding: 0;
