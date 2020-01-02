@@ -97,7 +97,7 @@
           </section>
         </div>
 
-        <div class="ml-8 d-inline-block">
+        <div :class="isOvermuch ? 'my-6' : 'ml-8 d-inline-block'">
           <h3>
             <v-icon>{{ icons.mdiAccountMultiple }}</v-icon>
             <span>授課教授</span>
@@ -230,6 +230,14 @@ export default class Course extends Vue {
     const term = `term=${this.semester.name.endsWith('上') ? 1 : 2}`;
 
     return `${base}?${courseno}&${year}&${term}`;
+  }
+
+  get isOvermuch() {
+    if (!Object.keys(this.semester).length) {
+      return false;
+    }
+
+    return this.semester.professors.length > 8;
   }
 
   private async created() {
