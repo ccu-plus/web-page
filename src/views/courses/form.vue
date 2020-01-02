@@ -64,12 +64,27 @@
               @nonce="(val) => (form.nonce = val)"
             />
 
-            <v-checkbox
-              v-model="form.anonymous"
-              class="mt-2 mb-4"
-              hide-details
-              label="匿名評論"
-            />
+            <div class="my-3 d-flex align-center">
+              <v-checkbox
+                v-model="form.anonymous"
+                class="mt-0 pt-0 mr-1"
+                hide-details
+                label="不顯示暱稱"
+              />
+
+              <v-tooltip right>
+                <template v-slot:activator="{ on }">
+                  <v-icon
+                    v-on="on"
+                    v-text="icons.mdiHelpCircle"
+                    class="cursor-help"
+                    small
+                  />
+                </template>
+
+                <span>暱稱將以「匿名」代替，系統仍會紀錄發文用戶</span>
+              </v-tooltip>
+            </div>
 
             <v-btn
               block
@@ -92,7 +107,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import axios from '@/libs/axios';
 import CaptchaInput from '@/components/captcha-input.vue';
-import { mdiClose, mdiSend } from '@mdi/js';
+import { mdiClose, mdiHelpCircle, mdiSend } from '@mdi/js';
 import pick from 'lodash/pick';
 import { ValidationObserver, ValidationProvider } from '@/libs/validate';
 
@@ -128,6 +143,7 @@ export default class CommentForm extends Vue {
 
   private icons = {
     mdiClose,
+    mdiHelpCircle,
     mdiSend,
   };
 
