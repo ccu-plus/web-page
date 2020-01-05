@@ -24,18 +24,9 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   configureWebpack: {
-    optimization: {
-      splitChunks: {
-        chunks: 'all',
-        maxAsyncRequests: 6,
-        maxInitialRequests: 6,
-        maxSize: 262144,
-        minSize: 98304,
-      }
-    },
     plugins,
   },
-  integrity: true,
+  // integrity: true,
   productionSourceMap: true,
   transpileDependencies: ['vuetify']
 };
