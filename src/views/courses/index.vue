@@ -133,6 +133,57 @@
     </h2>
 
     <v-card
+      v-if="!loaded"
+      class="mt-5"
+      outlined
+      tag="section"
+    >
+      <v-card-title class="course-skeleton-loader">
+        <v-skeleton-loader
+          type="text"
+          width="8rem"
+        />
+
+        <span class="mx-1">-</span>
+
+        <v-skeleton-loader
+          type="text"
+          width="7rem"
+        />
+
+        <span class="mx-2">·</span>
+
+        <v-skeleton-loader
+          type="text"
+          width="3rem"
+        />
+
+        <div class="flex-grow-1" />
+
+        <v-skeleton-loader
+          type="text"
+          width="8rem"
+        />
+
+        <span class="mx-2 grey--text text--lighten-1">·</span>
+
+        <v-skeleton-loader
+          type="text"
+          width="9.5rem"
+        />
+      </v-card-title>
+
+      <v-divider />
+
+      <v-card-text>
+        <v-skeleton-loader
+          max-width="80%"
+          type="paragraph"
+        />
+      </v-card-text>
+    </v-card>
+
+    <v-card
       v-for="comment in comments"
       class="mt-5"
       :key="`${comment.course.code}-${comment.commented_at}`"
@@ -195,6 +246,8 @@ export default class Courses extends Vue {
 
   private loading = false;
 
+  private loaded = true;
+
   private searched = false;
 
   get comments() {
@@ -251,9 +304,23 @@ export default class Courses extends Vue {
       return;
     }
 
+    this.loaded = false;
+
     const { data: { data } } = await axios.get('/courses/comments');
 
     this.$store.commit('setComments', data);
+
+    this.loaded = true;
   }
 }
 </script>
+
+<style lang="scss">
+.course-skeleton-loader {
+  .v-skeleton-loader__text {
+    border-radius: 1rem;
+    height: 1rem;
+    margin-bottom: 0;
+  }
+}
+</style>
