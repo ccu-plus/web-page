@@ -62,7 +62,9 @@
 
       <v-divider />
 
-      <v-card-text v-if="comment.deleted">應教授或第三方要求，此評論已被刪除</v-card-text>
+      <v-card-text v-if="comment.deleted">
+        <em class="grey--text">應教授或第三方要求，此評論已被刪除</em>
+      </v-card-text>
 
       <v-card-text v-else class="comment-content">{{ comment.content.trim() }}</v-card-text>
     </v-card>
