@@ -13,7 +13,7 @@
     "copy-to-clipboard": "^3.2.0",
     "core-js": "^3.1.2",
     "intersection-observer": "^0.7.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "store": "^2.0.12",
     "vee-validate": "^3.0.11",
     "vue": "^2.6.8",
