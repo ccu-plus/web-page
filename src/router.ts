@@ -13,7 +13,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.title) {
+  if (to.meta && to.meta.title) {
     document.title = `${to.meta.title} | CCU PLUS`;
   } else {
     document.title = 'CCU PLUS | 全新生活 由此領航';
