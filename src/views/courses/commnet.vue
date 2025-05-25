@@ -51,8 +51,32 @@
 
         <div class="flex-grow-1" />
 
+        <template v-if="comment.recommended">
+          <span class="grey--text text--darken-1">推薦：{{ comment.recommended }}/5</span>
+
+          <span class="mx-2 grey--text text--lighten-1">·</span>
+        </template>
+
+        <template v-if="comment.informative">
+          <span class="grey--text text--darken-1">知識：{{ comment.informative }}/5</span>
+
+          <span class="mx-2 grey--text text--lighten-1">·</span>
+        </template>
+
+        <template v-if="comment.challenging">
+          <span class="grey--text text--darken-1">難度：{{ comment.challenging }}/5</span>
+
+          <span class="mx-2 grey--text text--lighten-1">·</span>
+        </template>
+
+        <template v-if="comment.overall">
+          <span class="grey--text text--darken-1">評分：{{ comment.overall }}/5</span>
+
+          <span class="mx-2 grey--text text--lighten-1">·</span>
+        </template>
+
         <template v-if="comment.professor">
-          <span class="grey--text text--darken-1">受評教授：{{ comment.professor }}</span>
+          <span class="grey--text text--darken-1">教授：{{ comment.professor }}</span>
 
           <span class="mx-2 grey--text text--lighten-1">·</span>
         </template>

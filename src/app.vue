@@ -8,7 +8,7 @@
       max-height="64"
     >
       <v-row class="h-full" justify="space-around">
-        <v-col class="py-0" :cols="isHome ? 12 : 11" :lg="isHome ? 12 : 9" :xl="isHome ? 12 : 7">
+        <v-col class="py-0 d-flex align-center" :cols="isHome ? 12 : 11" :lg="isHome ? 12 : 9" :xl="isHome ? 12 : 7">
           <v-row align="center" class="h-full" :class="isHome ? 'px-4' : undefined">
             <v-toolbar-title>
               <router-link :to="{ name: 'home' }">
@@ -33,7 +33,6 @@
             <v-toolbar-items>
               <v-btn
                 v-for="link in links.navbar"
-                v-if="(typeof link.auth !== 'boolean') || link.auth === signIn"
                 exact
                 :icon="$vuetify.breakpoint.smAndDown"
                 :key="link.to"
@@ -104,27 +103,9 @@ export default class CCUPLUS extends Vue {
     return {
       navbar: [
         {
-          auth: true,
-          icon: mdiAccount,
-          name: this.$store.state.profile.nickname,
-          to: 'profile',
-        },
-        {
           icon: mdiCommentTextMultiple,
           name: '課程評論',
           to: 'courses',
-        },
-        {
-          auth: false,
-          icon: mdiLogin,
-          name: '登入',
-          to: 'sign-in',
-        },
-        {
-          auth: true,
-          icon: mdiLogout,
-          name: '登出',
-          to: 'sign-out',
         },
       ],
       footer: [
@@ -142,15 +123,11 @@ export default class CCUPLUS extends Vue {
     };
   }
 
-  get signIn() {
-    return this.$store.state.signIn;
-  }
-
   private async created() {
-    if (this.signIn) {
-      const { data: { data } } = await axios.get('/account/profile');
+    const { data: ip } = await axios.get('/ip');
 
-      this.$store.commit('setProfile', data);
+    if (ip.startsWith('140.123.')) {
+      this.$store.commit('setSignIn', true);
     }
   }
 }

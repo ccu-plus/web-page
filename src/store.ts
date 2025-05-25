@@ -1,5 +1,4 @@
 import axios from '@/libs/axios';
-import storage from 'store';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -7,7 +6,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    signIn: !!storage.get('api-token'),
+    signIn: false,
 
     profile: {
       nickname: '',

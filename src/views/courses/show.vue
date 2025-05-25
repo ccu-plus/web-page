@@ -73,31 +73,7 @@
           class="my-6"
         />
 
-        <div class="d-inline-block">
-          <h3>
-            <v-icon>{{ icons.mdiLibraryBooks }}</v-icon>
-            <span>課程大綱</span>
-          </h3>
-
-          <section>
-            <v-skeleton-loader v-if="loading" type="text" />
-
-            <v-btn
-              v-else
-              class="pa-0"
-              height="16"
-              :href="outlineLink"
-              rel="noopener noreferrer"
-              target="_blank"
-              text
-            >
-              <span>Ecourse</span>
-              <v-icon class="ml-1" small>{{ icons.mdiOpenInNew }}</v-icon>
-            </v-btn>
-          </section>
-        </div>
-
-        <div :class="isOvermuch ? 'my-6' : 'ml-8 d-inline-block'">
+        <div :class="isOvermuch ? 'my-6' : 'd-inline-block'">
           <h3>
             <v-icon>{{ icons.mdiAccountMultiple }}</v-icon>
             <span>授課教授</span>

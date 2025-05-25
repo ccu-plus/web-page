@@ -129,6 +129,21 @@
 
     <h2 class="headline mt-6">
       <v-icon large>{{ icons.mdiCommentText }}</v-icon>
+      <span class="ml-2">評論總數</span>
+    </h2>
+
+    <v-sparkline
+      auto-draw
+      :gradient="['#00c6ff', '#F0F', '#FF0']"
+      :labels="statistics.labels"
+      line-width="1"
+      show-labels
+      smooth
+      :value="statistics.value"
+    />
+
+    <h2 class="headline mt-6">
+      <v-icon large>{{ icons.mdiCommentText }}</v-icon>
       <span class="ml-2">最新評論</span>
     </h2>
 
@@ -227,7 +242,6 @@ import Departments from '@/libs/departments';
 import Dimensions from '@/libs/dimensions';
 import { mdiCommentText, mdiMagnify, mdiNewBox } from '@mdi/js';
 import { ValidationProvider, ValidationObserver } from '@/libs/validate';
-import track from '@/libs/track';
 
 @Component({
   components: {
@@ -249,6 +263,11 @@ export default class Courses extends Vue {
   private loaded = true;
 
   private searched = false;
+
+  private statistics = {
+    labels: [],
+    value: [],
+  }
 
   get comments() {
     return this.$store.state.comments;
@@ -288,18 +307,16 @@ export default class Courses extends Vue {
 
     await this.$store.dispatch('search', this.form);
 
-    track(this.$route.fullPath, {
-      type: 'search',
-      search: Object.values(this.form).filter((v) => v.length).join(' '),
-      count: this.$store.state.courses.length,
-    });
-
     this.loading = false;
 
     this.searched = true;
   }
 
   private async created() {
+    const { data: statistics } = await axios.get('/courses/statistics')
+
+    this.statistics = statistics;
+
     if (this.comments.length) {
       return;
     }

@@ -39,6 +39,56 @@
               menu-props="offsetY"
             />
 
+            <v-row v-if="!reply">
+              <v-col cols="12" lg="6" class="d-flex align-center pt-0">
+                <div>推薦程度</div>
+
+                <v-rating
+                    v-model="form.recommended"
+                    background-color="orange lighten-3"
+                    color="orange"
+                    hover
+                    length="5"
+                />
+              </v-col>
+
+              <v-col cols="12" lg="6" class="d-flex align-center pt-0">
+                <div>學到東西</div>
+
+                <v-rating
+                    v-model="form.informative"
+                    background-color="orange lighten-3"
+                    color="orange"
+                    hover
+                    length="5"
+                />
+              </v-col>
+
+              <v-col cols="12" lg="6" class="d-flex align-center pt-0">
+                <div>課程難度</div>
+
+                <v-rating
+                    v-model="form.challenging"
+                    background-color="orange lighten-3"
+                    color="orange"
+                    hover
+                    length="5"
+                />
+              </v-col>
+
+              <v-col cols="12" lg="6" class="d-flex align-center pt-0">
+                <div>整體評價</div>
+
+                <v-rating
+                    v-model="form.overall"
+                    background-color="orange lighten-3"
+                    color="orange"
+                    hover
+                    length="5"
+                />
+              </v-col>
+            </v-row>
+
             <validation-provider
               v-slot="{ errors }"
               name="內容"
@@ -64,30 +114,9 @@
               @nonce="(val) => (form.nonce = val)"
             />
 
-            <div class="my-3 d-flex align-center">
-              <v-checkbox
-                v-model="form.anonymous"
-                class="mt-0 pt-0 mr-1"
-                hide-details
-                label="不顯示暱稱"
-              />
-
-              <v-tooltip right>
-                <template v-slot:activator="{ on }">
-                  <v-icon
-                    v-on="on"
-                    v-text="icons.mdiHelpCircle"
-                    class="cursor-help"
-                    small
-                  />
-                </template>
-
-                <span>暱稱將以「匿名」代替，系統仍會紀錄發文用戶</span>
-              </v-tooltip>
-            </div>
-
             <v-btn
               block
+              class="mt-4"
               color="success"
               :disabled="invalid"
               :loading="loading"
@@ -134,7 +163,11 @@ export default class CommentForm extends Vue {
 
   private form = {
     content: '',
-    anonymous: false,
+    recommended: 3,
+    informative: 3,
+    challenging: 3,
+    overall: 3,
+    anonymous: true,
     professor: '',
     reply_to: this.reply,
     nonce: '',
@@ -165,7 +198,7 @@ export default class CommentForm extends Vue {
   private async submit() {
     const { data: { data }, status} = await axios.post(`/courses/${this.$route.params.code}/comments`, {
       captcha: `${this.form.nonce}.${this.form.captcha}`,
-      ...pick(this.form, ['content', 'anonymous', this.reply ? 'reply_to' : 'professor']),
+      ...pick(this.form, ['content', 'recommended', 'informative', 'challenging', 'overall', 'anonymous', this.reply ? 'reply_to' : 'professor']),
     });
 
     if (status === 422) {

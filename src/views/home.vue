@@ -38,7 +38,7 @@ export default class Home extends Vue {
       return next({ path: to.hash.substring(2), replace: true });
     }
 
-    next();
+    next({ name: 'courses', replace: true });
   }
 
   private onResize() {
